@@ -1,0 +1,43 @@
+
+# BlockGroup routing definition
+entity.block_group.collection:
+  path: '/admin/structure/block/block-group'
+  defaults:
+    _entity_list: 'block_group'
+    _title: 'Block group'
+  requirements:
+    _permission: 'administer blocks'
+
+entity.block_group.add_form:
+  path: '/admin/structure/block/block-group/add'
+  defaults:
+    _entity_form: 'block_group.add'
+    _title: 'Add Block group'
+  requirements:
+    _permission: 'administer blocks'
+
+entity.block_group.edit_form:
+  path: '/admin/structure/block/block-group/{block_group}'
+  defaults:
+    _entity_form: 'block_group.edit'
+    _title: 'Edit Block group'
+  requirements:
+    _permission: 'administer blocks'
+
+entity.block_group.delete_form:
+  path: '/admin/structure/block/block-group/{block_group}/delete'
+  defaults:
+    _entity_form: 'block_group.delete'
+    _title: 'Delete Block group'
+  requirements:
+    _permission: 'administer blocks'
+
+#### Access Conditions
+
+block_group.access_condition_select:
+  path: 'admin/structure/block/block-group/{block_group}/access/select'
+  defaults:
+    _controller: '\Drupal\block_groups\Controller\BlockGroupController::selectAccessCondition'
+    _title: 'Select access condition'
+  requirements:
+    _permission: 'administer blocks'

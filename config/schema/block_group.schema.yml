@@ -1,0 +1,21 @@
+block_groups.block_group.*:
+  type: config_entity
+  label: 'Block group config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string
+    access_logic:
+      type: string
+      label: 'Access logic'
+    access_conditions:
+      type: sequence
+      label: 'Access Conditions'
+      sequence:
+        - type: condition.plugin.[id]
+          label: 'Access Condition'
