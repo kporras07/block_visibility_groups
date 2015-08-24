@@ -39,10 +39,10 @@ use Drupal\block_visibility_groups\BlockVisibilityGroupInterface;
  *     "access_conditions",
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/block/block-group/{block_visibility_group}",
- *     "edit-form" = "/admin/structure/block/block-group/{block_visibility_group}/edit",
- *     "delete-form" = "/admin/structure/block/block-group/{block_visibility_group}/delete",
- *     "collection" =  "/admin/structure/block/block-group"
+ *     "canonical" = "/admin/structure/block/block-visibility-group/{block_visibility_group}",
+ *     "edit-form" = "/admin/structure/block/block-visibility-group/{block_visibility_group}/edit",
+ *     "delete-form" = "/admin/structure/block/block-visibility-group/{block_visibility_group}/delete",
+ *     "collection" =  "/admin/structure/block/block-visibility-group"
  *   }
  * )
  */

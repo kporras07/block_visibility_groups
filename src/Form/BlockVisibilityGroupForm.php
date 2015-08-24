@@ -68,7 +68,6 @@ class BlockVisibilityGroupForm extends EntityForm {
       $form['access_section_section']['add_condition'] = [
         '#type' => 'link',
         '#title' => $this->t('Add new access condition'),
-        // @todo Add route for selecting
         '#url' => Url::fromRoute('block_visibility_groups.access_condition_select', [
           'block_visibility_group' => $this->entity->id(),
         ]),

@@ -1,7 +1,7 @@
 
 # BlockVisibilityGroup routing definition
 entity.block_visibility_group.collection:
-  path: '/admin/structure/block/block-group'
+  path: '/admin/structure/block/block-visibility-group'
   defaults:
     _entity_list: 'block_visibility_group'
     _title: 'Block Visibility Group'
@@ -9,7 +9,7 @@ entity.block_visibility_group.collection:
     _permission: 'administer blocks'
 
 entity.block_visibility_group.add_form:
-  path: '/admin/structure/block/block-group/add'
+  path: '/admin/structure/block/block-visibility-group/add'
   defaults:
     _entity_form: 'block_visibility_group.add'
     _title: 'Add Block Visibility Group'
@@ -17,7 +17,7 @@ entity.block_visibility_group.add_form:
     _permission: 'administer blocks'
 
 entity.block_visibility_group.edit_form:
-  path: '/admin/structure/block/block-group/{block_visibility_group}'
+  path: '/admin/structure/block/block-visibility-group/{block_visibility_group}'
   defaults:
     _entity_form: 'block_visibility_group.edit'
     _title: 'Edit Block Visibility Group'
@@ -25,7 +25,7 @@ entity.block_visibility_group.edit_form:
     _permission: 'administer blocks'
 
 entity.block_visibility_group.delete_form:
-  path: '/admin/structure/block/block-group/{block_visibility_group}/delete'
+  path: '/admin/structure/block/block-visibility-group/{block_visibility_group}/delete'
   defaults:
     _entity_form: 'block_visibility_group.delete'
     _title: 'Delete Block Visibility Group'
@@ -35,7 +35,7 @@ entity.block_visibility_group.delete_form:
 #### Access Conditions
 
 block_visibility_groups.access_condition_select:
-  path: 'admin/structure/block/block-group/{block_visibility_group}/access/select'
+  path: 'admin/structure/block/block-visibility-group/{block_visibility_group}/access/select'
   defaults:
     _controller: '\Drupal\block_visibility_groups\Controller\BlockVisibilityGroupController::selectAccessCondition'
     _title: 'Select access condition'
@@ -43,7 +43,7 @@ block_visibility_groups.access_condition_select:
     _permission: 'administer blocks'
 
 block_visibility_groups.access_condition_add:
-  path: '/admin/structure/block-group/manage/{block_visibility_group}/access/add/{condition_id}'
+  path: '/admin/structure/block-visibility-group/manage/{block_visibility_group}/access/add/{condition_id}'
   defaults:
     _form: '\Drupal\block_visibility_groups\Form\AccessConditionAddForm'
     _title: 'Add new access condition'
@@ -51,7 +51,7 @@ block_visibility_groups.access_condition_add:
     _permission: 'administer blocks'
 
 block_visibility_groups.access_condition_edit:
-  path: '/admin/structure/block-groups/manage/{block_visibility_group}/access/edit/{condition_id}'
+  path: '/admin/structure/block-visibility-groups/manage/{block_visibility_group}/access/edit/{condition_id}'
   defaults:
     _form: '\Drupal\block_visibility_groups\Form\AccessConditionEditForm'
     _title: 'Edit Access Condition'
@@ -61,7 +61,7 @@ block_visibility_groups.access_condition_edit:
     _permission: 'administer blocks'
 
 block_visibility_groups.access_condition_delete:
-  path: '/admin/structure/block-groups/manage/{block_visibility_group}/access/delete/{condition_id}'
+  path: '/admin/structure/block-visibility-groups/manage/{block_visibility_group}/access/delete/{condition_id}'
   defaults:
     _form: '\Drupal\block_visibility_groups\Form\AccessConditionDeleteForm'
     _title: 'Delete access condition'

@@ -9,15 +9,20 @@ namespace Drupal\block_visibility_groups;
 
 
 use Drupal\block\BlockListBuilder;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Condition\ConditionPluginCollection;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
 
+  const UNSET_GROUP = 'UNSET-GROUP';
+  const ALL_GROUP = 'ALL-GROUP';
   /**
    * The entity storage class for Block Visibility Groups.
    *
@@ -55,41 +60,77 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
     $form = parent::buildForm($form, $form_state);
 
     $group_options = $this->getBlockVisibilityGroupOptions();
-    $current_block_visibility_group = $this->getCurrentBlockVisibilityGroup();
+    $default_value = $this->getCurrentBlockVisibilityGroup();
+    $current_block_visibility_group = NULL;
+    if (!in_array($default_value,[BlockVisibilityGroupedListBuilder::ALL_GROUP, BlockVisibilityGroupedListBuilder::UNSET_GROUP])) {
+      $current_block_visibility_group = $default_value;
+    }
     $options = [];
+
     foreach ($group_options as $key => $group_option) {
-      if ($current_block_visibility_group == $key) {
+      if ($default_value == $key) {
         $default_value = $group_option['path'];
       }
       $options[$group_option['path']] = $group_option['label'];
     }
-
-    $form['extra'] = array(
+    $form['block_visibility_group'] = array(
+      '#weight' => -100,
+    );
+    $form['block_visibility_group']['select'] = array(
       '#type' => 'select',
       '#title' => $this->t('Block Visibility Group'),
       '#options' => $options,
       '#default_value' => $default_value,
-      '#weight' => -100,
+
       // @todo Is there a better way to do this?
       '#attributes' => ['onchange' => 'this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value)'],
+
     );
+    $description = $this->t('Block Visibility Groups allow you to control the visibility of multiple blocks in one place.');
+
+    if (!$this->groupsExist()) {
+      $description .= ' ' . $this->t('No Groups have been created yet.');
+      $form['block_visibility_group']['create'] = array(
+        '#type' => 'link',
+        '#title' => t('Create a Group'),
+        '#url' => Url::fromRoute('entity.block_visibility_group.add_form'),
+      );
+    }
+    else {
+      if ($current_block_visibility_group) {
+        $group = $this->block_visibility_group_storage->load($current_block_visibility_group);
+        $url_info = $group->urlInfo('edit-form');
+        $form['block_visibility_group']['edit'] = array(
+          '#type' => 'link',
+          '#title' => t('Edit current Group'),
+          '#url' => $url_info,
+        );
+      }
+
+    }
+    $form['block_visibility_group']['select']['#description'] = $description;
+
+
     return $form;
   }
 
   protected function getCurrentBlockVisibilityGroup() {
     $request_id = $this->request->query->get('block_visibility_group');
+    if (!$request_id) {
+      $request_id = BlockVisibilityGroupedListBuilder::UNSET_GROUP;
+    }
     return $request_id;
   }
 
   protected function getBlockVisibilityGroupOptions() {
-    $block_visibility_groups = $this->block_visibility_group_storage->loadMultiple();
+
     $route_options = [
-      '' => ['label' => $this->t('All Blocks')],
-      '-unset' => ['label' => $this->t('Unset Only')],
+      BlockVisibilityGroupedListBuilder::UNSET_GROUP => ['label' => $this->t('Unset Only')],
+      BlockVisibilityGroupedListBuilder::ALL_GROUP => ['label' => $this->t('All Blocks')],
     ];
-    foreach ($block_visibility_groups as $type) {
-      $group_id = $type->id();
-      $route_options[$group_id] = ['label' => $type->label()];
+    $block_visibility_group_labels = $this->getBlockVisibilityLabels();
+    foreach ($block_visibility_group_labels as $id => $label) {
+      $route_options[$id] = ['label' => $label];
     }
     foreach ($route_options as $key => &$route_option) {
 
@@ -153,7 +194,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
           $condition_config = $conditions->get('condition_group')->getConfiguration();
           $config_block_visibility_group = $condition_config['block_visibility_group'];
         }
-        if ('-unset' == $current_block_visibility_group) {
+        if (BlockVisibilityGroupedListBuilder::UNSET_GROUP == $current_block_visibility_group) {
           if (!empty($config_block_visibility_group)) {
             unset($entity_ids[$block->id()]);
           }
@@ -166,6 +207,23 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
     return $entity_ids;
   }
 
+  /**
+   * @return \Drupal\Core\Entity\EntityInterface[]
+   */
+  protected function getBlockVisibilityLabels() {
+    $block_visibility_groups = $this->block_visibility_group_storage->loadMultiple();
+    $labels = [];
+    foreach ($block_visibility_groups as $type) {
+
+      $labels[$type->id()] = $type->label();
+    }
+    return $labels;
+  }
+
+  protected function groupsExist() {
+    return FALSE;
+    return !empty($this->block_visibility_group_storage->loadMultiple());
+  }
 
 
 }

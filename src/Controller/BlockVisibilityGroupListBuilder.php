@@ -9,6 +9,7 @@ namespace Drupal\block_visibility_groups\Controller;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a listing of Block Visibility Group entities.
@@ -20,7 +21,9 @@ class BlockVisibilityGroupListBuilder extends ConfigEntityListBuilder {
   public function buildHeader() {
     $header['label'] = $this->t('Block Visibility Group');
     $header['id'] = $this->t('Machine name');
-    return $header + parent::buildHeader();
+    $header += parent::buildHeader();
+    $header['manage'] = $this->t('Manage Blocks');
+    return $header;
   }
 
   /**
@@ -30,7 +33,20 @@ class BlockVisibilityGroupListBuilder extends ConfigEntityListBuilder {
     $row['label'] = $this->getLabel($entity);
     $row['id'] = $entity->id();
     // You probably want a few more properties here...
-    return $row + parent::buildRow($entity);
+    $row += parent::buildRow($entity);
+    $url = Url::fromRoute(
+      'block.admin_display',
+      array(),
+      ['query' => ['block_visibility_group' => $row['id']]]
+    );
+    $row['manage'] = array(
+      '#type' => 'link',
+      '#title' => 'Manage Blocks',
+      // @todo Why does this crash?
+      //'#url' => $url,
+
+    );
+    return $row;
   }
 
 }
