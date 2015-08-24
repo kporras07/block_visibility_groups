@@ -8,6 +8,7 @@
 namespace Drupal\block_groups\Form;
 
 use Drupal\Core\Condition\ConditionManager;
+use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -28,8 +29,9 @@ class AccessConditionAddForm extends AccessConditionFormBase {
    * @param \Drupal\Core\Condition\ConditionManager $condition_manager
    *   The condition manager.
    */
-  public function __construct(ConditionManager $condition_manager) {
+  public function __construct(ConditionManager $condition_manager, ContextRepositoryInterface $context_repository) {
     $this->conditionManager = $condition_manager;
+    $this->contextRepository = $context_repository;
   }
 
   /**
@@ -37,7 +39,8 @@ class AccessConditionAddForm extends AccessConditionFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.condition')
+      $container->get('plugin.manager.condition'),
+      $container->get('context.repository')
     );
   }
 

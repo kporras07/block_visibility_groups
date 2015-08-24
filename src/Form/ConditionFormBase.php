@@ -14,6 +14,8 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\block_groups\Entity\BlockGroup;
+use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a base form for editing and adding a condition.
@@ -35,6 +37,29 @@ abstract class ConditionFormBase extends FormBase {
    * @var \Drupal\Core\Condition\ConditionInterface
    */
   protected $condition;
+
+  /**
+   * The context repository service.
+   *
+   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
+   */
+  protected $contextRepository;
+
+  /**
+   * ConditionFormBase constructor.
+   *
+   * @param ContextRepositoryInterface $contextRepository
+   */
+  public function __construct(ContextRepositoryInterface $context_repository) {
+    $this->contextRepository = $context_repository;
+  }
+
+  public static function create(ContainerInterface $container) {
+    return new static (
+      $container->get('context.repository')
+    );
+  }
+
 
   /**
    * Prepares the condition used by this form.
@@ -70,8 +95,9 @@ abstract class ConditionFormBase extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, BlockGroupInterface $block_group = NULL, $condition_id = NULL) {
     $this->block_group = $block_group;
     $this->condition = $this->prepareCondition($condition_id);
-    $temporary = $form_state->getTemporary();
-    $form_state->setTemporary($temporary);
+    // Store the gathered contexts in the form state for other objects to use
+    // during form building.
+    $form_state->setTemporaryValue('gathered_contexts', $this->contextRepository->getAvailableContexts());
 
     // Allow the condition to add to the form.
     $form['condition'] = $this->condition->buildConfigurationForm([], $form_state);

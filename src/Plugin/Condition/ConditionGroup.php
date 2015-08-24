@@ -8,6 +8,9 @@
 namespace Drupal\block_groups\Plugin\Condition;
 
 
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Component\Plugin\Exception\ContextException;
+use Drupal\Core\Condition\ConditionAccessResolverTrait;
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
@@ -16,6 +19,8 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\block_groups\Entity\BlockGroup;
+use Drupal\Core\Condition\ConditionPluginCollection;
 
 /**
  * Provides a 'Condition Group' condition.
@@ -27,6 +32,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPluginInterface{
 
+  use ConditionAccessResolverTrait;
   /**
    * The condition plugin manager.
    *
@@ -62,7 +68,33 @@ class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPlug
    *   TRUE if the condition has been met, FALSE otherwise.
    */
   public function evaluate() {
-    // TODO: Implement evaluate() method.
+    $block_group_id = $this->configuration['block_group'];
+    if (empty($block_group_id )) {
+      return TRUE;
+    }
+    /** @var BlockGroup $block_group */
+    $block_group = $this->entityStorage->load($block_group_id);
+    /** @var ConditionPluginCollection $access_conditions */
+    $access_conditions = $block_group->getAccessConditions();
+    if ($this->applyContexts($access_conditions)) {
+      return $this->resolveConditions($access_conditions, $block_group->getAccessLogic());
+    }
+    return FALSE;
+  }
+
+  protected function applyContexts(ConditionPluginCollection &$conditions) {
+    foreach ($conditions as $condition) {
+      if ($condition instanceof ContextAwarePluginInterface) {
+        try {
+          $contexts = $this->contextRepository->getRuntimeContexts(array_values($condition->getContextMapping()));
+          $this->contextHandler->applyContextMapping($condition, $contexts);
+        }
+        catch (ContextException $e) {
+          return FALSE;
+        }
+      }
+    }
+    return TRUE;
   }
 
   /**
@@ -74,6 +106,7 @@ class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPlug
 
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $block_groups = $this->entityStorage->loadMultiple();
+    $options = ['' => $this->t('No Block Group')];
     foreach ($block_groups as $type) {
       $options[$type->id()] = $type->label();
     }
@@ -89,6 +122,15 @@ class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPlug
   }
 
 
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $user_values = $form_state->getValues();
+    foreach ($user_values as $key => $value) {
+      if ($key != 'negate') {
+        $this->configuration[$key] = $value;
+      }
+    }
+    parent::submitConfigurationForm($form, $form_state);
+  }
 
   /**
    * Creates an instance of the plugin.

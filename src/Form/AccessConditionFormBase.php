@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
  */
 abstract class AccessConditionFormBase extends ConditionFormBase {
 
+
   /**
    * {@inheritdoc}
    */
