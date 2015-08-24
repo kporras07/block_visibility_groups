@@ -221,7 +221,6 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
   }
 
   protected function groupsExist() {
-    return FALSE;
     return !empty($this->block_visibility_group_storage->loadMultiple());
   }
 

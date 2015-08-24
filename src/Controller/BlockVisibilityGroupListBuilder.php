@@ -22,7 +22,7 @@ class BlockVisibilityGroupListBuilder extends ConfigEntityListBuilder {
     $header['label'] = $this->t('Block Visibility Group');
     $header['id'] = $this->t('Machine name');
     $header += parent::buildHeader();
-    $header['manage'] = $this->t('Manage Blocks');
+    // $header['manage_blocks'] = $this->t('Manage Blocks');
     return $header;
   }
 
@@ -39,13 +39,18 @@ class BlockVisibilityGroupListBuilder extends ConfigEntityListBuilder {
       array(),
       ['query' => ['block_visibility_group' => $row['id']]]
     );
-    $row['manage'] = array(
+    /*$row['manage_blocks'] = array(
       '#type' => 'link',
       '#title' => 'Manage Blocks',
       // @todo Why does this crash?
-      //'#url' => $url,
+      '#url' => $url,
 
-    );
+    ); */
+    $row['operations']['data']['#links']['manage_blocks'] = [
+      'title' => $this->t('Manage Blocks'),
+      'weight' => 110,
+      'url' => $url,
+    ];
     return $row;
   }
 
