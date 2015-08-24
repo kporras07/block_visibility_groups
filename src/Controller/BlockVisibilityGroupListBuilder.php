@@ -48,9 +48,10 @@ class BlockVisibilityGroupListBuilder extends ConfigEntityListBuilder {
     ); */
     $row['operations']['data']['#links']['manage_blocks'] = [
       'title' => $this->t('Manage Blocks'),
-      'weight' => 110,
+      'weight' => 80,
       'url' => $url,
     ];
+    uasort($row['operations']['data']['#links'], '\Drupal\Component\Utility\SortArray::sortByWeightElement');
     return $row;
   }
 
