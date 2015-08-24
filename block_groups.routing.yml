@@ -67,3 +67,12 @@ block_groups.access_condition_delete:
     _title: 'Delete access condition'
   requirements:
     _permission: 'administer blocks'
+
+block_groups.admin_library:
+  path: 'admin/structure/block/library/{theme}/{block_group}'
+  defaults:
+    _controller: '\Drupal\block_groups\Controller\BlockLibraryGroupsController::listBlocks'
+    _title: 'Place block'
+  requirements:
+    _access_theme: 'TRUE'
+    _permission: 'administer blocks'
