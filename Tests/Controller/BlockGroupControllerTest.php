@@ -18,7 +18,7 @@ class BlockGroupControllerTest extends WebTestBase {
   /**
    * Drupal\Core\Condition\ConditionManager definition.
    *
-   * @var Drupal\Core\Condition\ConditionManager
+   * @var \Drupal\Core\Condition\ConditionManager
    */
   protected $plugin_manager_condition;
   /**

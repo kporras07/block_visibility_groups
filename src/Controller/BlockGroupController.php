@@ -8,7 +8,9 @@
 namespace Drupal\block_groups\Controller;
 
 use Drupal\block_groups\Entity\BlockGroup;
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Condition\ConditionManager;
 
@@ -24,12 +26,12 @@ class BlockGroupController extends ControllerBase {
    *
    * @var \Drupal\Core\Condition\ConditionManager
    */
-  protected $plugin_manager_condition;
+  protected $conditionManager;
   /**
    * {@inheritdoc}
    */
   public function __construct(ConditionManager $plugin_manager_condition) {
-    $this->plugin_manager_condition = $plugin_manager_condition;
+    $this->conditionManager = $plugin_manager_condition;
   }
 
   /**
@@ -55,10 +57,10 @@ class BlockGroupController extends ControllerBase {
   }
 
   /**
-   * Presents a list of access conditions to add to the page entity.
+   * Presents a list of access conditions to add to the block_group entity.
    *
    * @param \Drupal\block_groups\Entity\BlockGroup $block_group
-   *   The page entity.
+   *   The block_group entity.
    *
    * @return array
    *   The access condition selection page.
@@ -68,13 +70,14 @@ class BlockGroupController extends ControllerBase {
       '#theme' => 'links',
       '#links' => [],
     ];
-    return $build;
     $available_plugins = $this->conditionManager->getDefinitions();
-    /*foreach ($available_plugins as $access_id => $access_condition) {
+    // @todo Should nesting Conditions be allowed
+    unset($available_plugins['condition_group']);
+    foreach ($available_plugins as $access_id => $access_condition) {
       $build['#links'][$access_id] = [
-        'title' => $access_condition['label'],
-        'url' => Url::fromRoute('page_manager.access_condition_add', [
-          'page' => $page->id(),
+        'title' => $access_condition['label'], //$access_condition['label'],
+        'url' => Url::fromRoute('block_groups.access_condition_add', [
+          'block_group' => $block_group->id(),
           'condition_id' => $access_id,
         ]),
         'attributes' => [
@@ -85,7 +88,7 @@ class BlockGroupController extends ControllerBase {
           ]),
         ],
       ];
-    }*/
+    }
     return $build;
   }
 
