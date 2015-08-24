@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Contains Drupal\block_groups\Controller\BlockGroupController.
+ * Contains Drupal\block_visibility_groups\Controller\BlockVisibilityGroupController.
  */
 
-namespace Drupal\block_groups\Controller;
+namespace Drupal\block_visibility_groups\Controller;
 
-use Drupal\block_groups\Entity\BlockGroup;
+use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
@@ -15,11 +15,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Condition\ConditionManager;
 
 /**
- * Class BlockGroupController.
+ * Class BlockVisibilityGroupController.
  *
- * @package Drupal\block_groups\Controller
+ * @package Drupal\block_visibility_groups\Controller
  */
-class BlockGroupController extends ControllerBase {
+class BlockVisibilityGroupController extends ControllerBase {
 
   /**
    * Drupal\Core\Condition\ConditionManager definition.
@@ -57,15 +57,15 @@ class BlockGroupController extends ControllerBase {
   }
 
   /**
-   * Presents a list of access conditions to add to the block_group entity.
+   * Presents a list of access conditions to add to the block_visibility_group entity.
    *
-   * @param \Drupal\block_groups\Entity\BlockGroup $block_group
-   *   The block_group entity.
+   * @param \Drupal\block_visibility_groups\Entity\BlockVisibilityGroup $block_visibility_group
+   *   The block_visibility_group entity.
    *
    * @return array
    *   The access condition selection page.
    */
-  public function selectAccessCondition(BlockGroup $block_group) {
+  public function selectAccessCondition(BlockVisibilityGroup $block_visibility_group) {
     $build = [
       '#theme' => 'links',
       '#links' => [],
@@ -76,8 +76,8 @@ class BlockGroupController extends ControllerBase {
     foreach ($available_plugins as $access_id => $access_condition) {
       $build['#links'][$access_id] = [
         'title' => $access_condition['label'], //$access_condition['label'],
-        'url' => Url::fromRoute('block_groups.access_condition_add', [
-          'block_group' => $block_group->id(),
+        'url' => Url::fromRoute('block_visibility_groups.access_condition_add', [
+          'block_visibility_group' => $block_visibility_group->id(),
           'condition_id' => $access_id,
         ]),
         'attributes' => [

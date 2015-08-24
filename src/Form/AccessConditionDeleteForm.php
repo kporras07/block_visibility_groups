@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\block_groups\Form\AccessConditionDeleteForm.
+ * Contains \Drupal\block_visibility_groups\Form\AccessConditionDeleteForm.
  */
 
-namespace Drupal\block_groups\Form;
+namespace Drupal\block_visibility_groups\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\block_groups\Entity\BlockGroup;
+use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Core\Form\ConfirmFormBase;
 
 /**
@@ -17,11 +17,11 @@ use Drupal\Core\Form\ConfirmFormBase;
 class AccessConditionDeleteForm extends ConfirmFormBase {
 
   /**
-   * The block_group entity this selection condition belongs to.
+   * The block_visibility_group entity this selection condition belongs to.
    *
-   * @var \Drupal\block_groups\Entity\BlockGroup
+   * @var \Drupal\block_visibility_groups\Entity\BlockVisibilityGroup
    */
-  protected $block_group;
+  protected $block_visibility_group;
 
   /**
    * The access condition used by this form.
@@ -34,7 +34,7 @@ class AccessConditionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'block_group_manager_access_condition_delete_form';
+    return 'block_visibility_group_manager_access_condition_delete_form';
   }
 
   /**
@@ -48,7 +48,7 @@ class AccessConditionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->block_group->urlInfo('edit-form');
+    return $this->block_visibility_group->urlInfo('edit-form');
   }
 
   /**
@@ -61,9 +61,9 @@ class AccessConditionDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, BlockGroup $block_group = NULL, $condition_id = NULL) {
-    $this->block_group = $block_group;
-    $this->accessCondition = $block_group->getAccessCondition($condition_id);
+  public function buildForm(array $form, FormStateInterface $form_state, BlockVisibilityGroup $block_visibility_group = NULL, $condition_id = NULL) {
+    $this->block_visibility_group = $block_visibility_group;
+    $this->accessCondition = $block_visibility_group->getAccessCondition($condition_id);
     return parent::buildForm($form, $form_state);
   }
 
@@ -71,8 +71,8 @@ class AccessConditionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->block_group->removeAccessCondition($this->accessCondition->getConfiguration()['uuid']);
-    $this->block_group->save();
+    $this->block_visibility_group->removeAccessCondition($this->accessCondition->getConfiguration()['uuid']);
+    $this->block_visibility_group->save();
     drupal_set_message($this->t('The access condition %name has been removed.', ['%name' => $this->accessCondition->getPluginDefinition()['label']]));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

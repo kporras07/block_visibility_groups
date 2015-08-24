@@ -1,6 +1,0 @@
-entity.block_group.add_form:
-  route_name: 'entity.block_group.add_form'
-  title: 'Add Block group'
-  appears_on:
-    - entity.block_group.collection
-

@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains Drupal\block_groups\Form\BlockGroupDeleteForm.
+ * Contains Drupal\block_visibility_groups\Form\BlockVisibilityGroupDeleteForm.
  */
 
-namespace Drupal\block_groups\Form;
+namespace Drupal\block_visibility_groups\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Builds the form to delete Block group entities.
+ * Builds the form to delete Block Visibility Group entities.
  */
-class BlockGroupDeleteForm extends EntityConfirmFormBase {
+class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
@@ -26,7 +26,7 @@ class BlockGroupDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.block_group.collection');
+    return new Url('entity.block_visibility_group.collection');
   }
 
   /**

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains Drupal\block_groups\Form\BlockGroupForm.
+ * Contains Drupal\block_visibility_groups\Form\BlockVisibilityGroupForm.
  */
 
-namespace Drupal\block_groups\Form;
+namespace Drupal\block_visibility_groups\Form;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
@@ -13,39 +13,39 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\block_groups\Entity\BlockGroup;
+use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 
 /**
- * Class BlockGroupForm.
+ * Class BlockVisibilityGroupForm.
  *
- * @package Drupal\block_groups\Form
+ * @package Drupal\block_visibility_groups\Form
  */
-class BlockGroupForm extends EntityForm {
+class BlockVisibilityGroupForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
-    /** @var BlockGroup $block_group */
-    $block_group = $this->entity;
+    /** @var BlockVisibilityGroup $block_visibility_group */
+    $block_visibility_group = $this->entity;
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
-      '#default_value' => $block_group->label(),
-      '#description' => $this->t("Label for the Block group."),
+      '#default_value' => $block_visibility_group->label(),
+      '#description' => $this->t("Label for the Block Visibility Group."),
       '#required' => TRUE,
     );
 
     $form['id'] = array(
       '#type' => 'machine_name',
-      '#default_value' => $block_group->id(),
+      '#default_value' => $block_visibility_group->id(),
       '#machine_name' => array(
-        'exists' => '\Drupal\block_groups\Entity\BlockGroup::load',
+        'exists' => '\Drupal\block_visibility_groups\Entity\BlockVisibilityGroup::load',
       ),
-      '#disabled' => !$block_group->isNew(),
+      '#disabled' => !$block_visibility_group->isNew(),
     );
-    if (!$block_group->isNew()) {
+    if (!$block_visibility_group->isNew()) {
       $attributes = [
         'class' => ['use-ajax'],
         'data-dialog-type' => 'modal',
@@ -69,8 +69,8 @@ class BlockGroupForm extends EntityForm {
         '#type' => 'link',
         '#title' => $this->t('Add new access condition'),
         // @todo Add route for selecting
-        '#url' => Url::fromRoute('block_groups.access_condition_select', [
-          'block_group' => $this->entity->id(),
+        '#url' => Url::fromRoute('block_visibility_groups.access_condition_select', [
+          'block_visibility_group' => $this->entity->id(),
         ]),
         '#attributes' => $add_button_attributes,
         '#attached' => [
@@ -79,7 +79,7 @@ class BlockGroupForm extends EntityForm {
           ],
         ],
       ];
-      if ($access_conditions = $block_group->getAccessConditions()) {
+      if ($access_conditions = $block_visibility_group->getAccessConditions()) {
         $form['access_section_section']['access_section'] = [
           '#type' => 'table',
           '#header' => [
@@ -109,16 +109,16 @@ class BlockGroupForm extends EntityForm {
           $operations = [];
           $operations['edit'] = [
             'title' => $this->t('Edit'),
-            'url' => Url::fromRoute('block_groups.access_condition_edit', [
-              'block_group' => $this->entity->id(),
+            'url' => Url::fromRoute('block_visibility_groups.access_condition_edit', [
+              'block_visibility_group' => $this->entity->id(),
               'condition_id' => $access_id,
             ]),
             'attributes' => $attributes,
           ];
           $operations['delete'] = [
             'title' => $this->t('Delete'),
-            'url' => Url::fromRoute('block_groups.access_condition_delete', [
-              'block_group' => $this->entity->id(),
+            'url' => Url::fromRoute('block_visibility_groups.access_condition_delete', [
+              'block_visibility_group' => $this->entity->id(),
               'condition_id' => $access_id,
             ]),
             'attributes' => $attributes,
@@ -141,20 +141,20 @@ class BlockGroupForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $block_group = $this->entity;
-    $status = $block_group->save();
+    $block_visibility_group = $this->entity;
+    $status = $block_visibility_group->save();
 
     if ($status) {
-      drupal_set_message($this->t('Saved the %label Block group.', array(
-        '%label' => $block_group->label(),
+      drupal_set_message($this->t('Saved the %label Block Visibility Group.', array(
+        '%label' => $block_visibility_group->label(),
       )));
     }
     else {
-      drupal_set_message($this->t('The %label Block group was not saved.', array(
-        '%label' => $block_group->label(),
+      drupal_set_message($this->t('The %label Block Visibility Group was not saved.', array(
+        '%label' => $block_visibility_group->label(),
       )));
     }
-    $form_state->setRedirectUrl($block_group->urlInfo('collection'));
+    $form_state->setRedirectUrl($block_visibility_group->urlInfo('collection'));
   }
 
 }

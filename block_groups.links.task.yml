@@ -1,4 +1,0 @@
-entity.block_group.collection:
-  title: 'Block Groups'
-  route_name: entity.block_group.collection
-  base_route: block.admin_display

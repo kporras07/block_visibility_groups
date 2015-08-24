@@ -1,0 +1,7 @@
+# Block Visibility Group menu items definition
+entity.block_visibility_group.collection:
+  title: 'Block Visibility Group'
+  route_name: entity.block_visibility_group.collection
+  description: 'List Block Visibility Group'
+  parent: system.admin_structure
+

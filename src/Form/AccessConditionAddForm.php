@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains   \Drupal\block_groups\Form\AccessConditionAddForm.
+ * Contains   \Drupal\block_visibility_groups\Form\AccessConditionAddForm.
  */
 
-namespace Drupal\block_groups\Form;
+namespace Drupal\block_visibility_groups\Form;
 
 use Drupal\Core\Condition\ConditionManager;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
@@ -48,7 +48,7 @@ class AccessConditionAddForm extends AccessConditionFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'block_group_access_condition_add_form';
+    return 'block_visibility_group_access_condition_add_form';
   }
 
   /**

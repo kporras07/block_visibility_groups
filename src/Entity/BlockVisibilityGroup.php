@@ -2,30 +2,30 @@
 
 /**
  * @file
- * Contains Drupal\block_groups\Entity\BlockGroup.
+ * Contains Drupal\block_visibility_groups\Entity\BlockVisibilityGroup.
  */
 
-namespace Drupal\block_groups\Entity;
+namespace Drupal\block_visibility_groups\Entity;
 
 use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\block_groups\BlockGroupInterface;
+use Drupal\block_visibility_groups\BlockVisibilityGroupInterface;
 
 /**
- * Defines the Block group entity.
+ * Defines the Block Visibility Group entity.
  *
  * @ConfigEntityType(
- *   id = "block_group",
- *   label = @Translation("Block group"),
+ *   id = "block_visibility_group",
+ *   label = @Translation("Block Visibility Group"),
  *   handlers = {
- *     "list_builder" = "Drupal\block_groups\Controller\BlockGroupListBuilder",
+ *     "list_builder" = "Drupal\block_visibility_groups\Controller\BlockVisibilityGroupListBuilder",
  *     "form" = {
- *       "add" = "Drupal\block_groups\Form\BlockGroupForm",
- *       "edit" = "Drupal\block_groups\Form\BlockGroupForm",
- *       "delete" = "Drupal\block_groups\Form\BlockGroupDeleteForm"
+ *       "add" = "Drupal\block_visibility_groups\Form\BlockVisibilityGroupForm",
+ *       "edit" = "Drupal\block_visibility_groups\Form\BlockVisibilityGroupForm",
+ *       "delete" = "Drupal\block_visibility_groups\Form\BlockVisibilityGroupDeleteForm"
  *     }
  *   },
- *   config_prefix = "block_group",
+ *   config_prefix = "block_visibility_group",
  *   admin_permission = "administer site configuration",
  *   entity_keys = {
  *     "id" = "id",
@@ -39,16 +39,16 @@ use Drupal\block_groups\BlockGroupInterface;
  *     "access_conditions",
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/block/block-group/{block_group}",
- *     "edit-form" = "/admin/structure/block/block-group/{block_group}/edit",
- *     "delete-form" = "/admin/structure/block/block-group/{block_group}/delete",
+ *     "canonical" = "/admin/structure/block/block-group/{block_visibility_group}",
+ *     "edit-form" = "/admin/structure/block/block-group/{block_visibility_group}/edit",
+ *     "delete-form" = "/admin/structure/block/block-group/{block_visibility_group}/delete",
  *     "collection" =  "/admin/structure/block/block-group"
  *   }
  * )
  */
-class BlockGroup extends ConfigEntityBase implements BlockGroupInterface {
+class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGroupInterface {
   /**
-   * The Block group ID.
+   * The Block Visibility Group ID.
    *
    * @var string
    */
@@ -63,7 +63,7 @@ class BlockGroup extends ConfigEntityBase implements BlockGroupInterface {
     ];
   }
   /**
-   * The Block group label.
+   * The Block Visibility Group label.
    *
    * @var string
    */

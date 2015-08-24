@@ -1,7 +1,0 @@
-# Block group menu items definition
-entity.block_group.collection:
-  title: 'Block group'
-  route_name: entity.block_group.collection
-  description: 'List Block group'
-  parent: system.admin_structure
-

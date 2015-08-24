@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\block_groups\Form\AccessConditionEditForm.
+ * Contains \Drupal\block_visibility_groups\Form\AccessConditionEditForm.
  */
 
-namespace Drupal\block_groups\Form;
+namespace Drupal\block_visibility_groups\Form;
 
 /**
  * Provides a form for editing an access condition.
@@ -16,15 +16,15 @@ class AccessConditionEditForm extends AccessConditionFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'block_group_manager_access_condition_edit_form';
+    return 'block_visibility_group_manager_access_condition_edit_form';
   }
 
   /**
    * {@inheritdoc}
    */
   protected function prepareCondition($condition_id) {
-    // Load the access condition directly from the block_group entity.
-    return $this->block_group->getAccessCondition($condition_id);
+    // Load the access condition directly from the block_visibility_group entity.
+    return $this->block_visibility_group->getAccessCondition($condition_id);
   }
 
   /**

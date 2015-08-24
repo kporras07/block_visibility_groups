@@ -1,6 +1,6 @@
-block_groups.block_group.*:
+block_visibility_groups.block_visibility_group.*:
   type: config_entity
-  label: 'Block group config'
+  label: 'Block Visibility Group config'
   mapping:
     id:
       type: string

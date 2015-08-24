@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\block_group\Form\ConditionFormBase.
+ * Contains \Drupal\block_visibility_group\Form\ConditionFormBase.
  */
 
-namespace Drupal\block_groups\Form;
+namespace Drupal\block_visibility_groups\Form;
 
-use Drupal\block_groups\BlockGroupInterface;
+use Drupal\block_visibility_groups\BlockVisibilityGroupInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
-use Drupal\block_groups\Entity\BlockGroup;
+use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -25,11 +25,11 @@ abstract class ConditionFormBase extends FormBase {
   use ContextAwarePluginAssignmentTrait;
 
   /**
-   * The block_group entity this condition belongs to.
+   * The block_visibility_group entity this condition belongs to.
    *
-   * @var \Drupal\block_groups\Entity\BlockGroup
+   * @var \Drupal\block_visibility_groups\Entity\BlockVisibilityGroup
    */
-  protected $block_group;
+  protected $block_visibility_group;
 
   /**
    * The condition used by this form.
@@ -92,8 +92,8 @@ abstract class ConditionFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, BlockGroupInterface $block_group = NULL, $condition_id = NULL) {
-    $this->block_group = $block_group;
+  public function buildForm(array $form, FormStateInterface $form_state, BlockVisibilityGroupInterface $block_visibility_group = NULL, $condition_id = NULL) {
+    $this->block_visibility_group = $block_visibility_group;
     $this->condition = $this->prepareCondition($condition_id);
     // Store the gathered contexts in the form state for other objects to use
     // during form building.

@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains Drupal\block_groups\Controller\BlockGroupListBuilder.
+ * Contains Drupal\block_visibility_groups\Controller\BlockVisibilityGroupListBuilder.
  */
 
-namespace Drupal\block_groups\Controller;
+namespace Drupal\block_visibility_groups\Controller;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Provides a listing of Block group entities.
+ * Provides a listing of Block Visibility Group entities.
  */
-class BlockGroupListBuilder extends ConfigEntityListBuilder {
+class BlockVisibilityGroupListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = $this->t('Block group');
+    $header['label'] = $this->t('Block Visibility Group');
     $header['id'] = $this->t('Machine name');
     return $header + parent::buildHeader();
   }
