@@ -37,6 +37,7 @@ use Drupal\block_visibility_groups\BlockVisibilityGroupInterface;
  *     "label",
  *     "access_logic",
  *     "access_conditions",
+ *     "allow_other_conditions",
  *   },
  *   links = {
  *     "canonical" = "/admin/structure/block/block-visibility-group/{block_visibility_group}",
@@ -53,6 +54,25 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
    * @var string
    */
   protected $id;
+  /**
+   *
+   * @var boolean
+   */
+  protected $allow_other_conditions;
+
+  /**
+   * @return boolean
+   */
+  public function isAllowOtherConditions() {
+    return $this->allow_other_conditions;
+  }
+
+  /**
+   * @param boolean $allow_other_conditions
+   */
+  public function setAllowOtherConditions($allow_other_conditions) {
+    $this->allow_other_conditions = $allow_other_conditions;
+  }
 
   /**
    * {@inheritdoc}

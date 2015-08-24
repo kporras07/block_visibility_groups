@@ -19,3 +19,6 @@ block_visibility_groups.block_visibility_group.*:
       sequence:
         - type: condition.plugin.[id]
           label: 'Access Condition'
+    allow_other_conditions:
+      type: boolean
+      label: 'Allow Other Conditions'

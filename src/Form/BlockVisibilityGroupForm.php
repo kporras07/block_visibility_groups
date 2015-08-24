@@ -65,6 +65,12 @@ class BlockVisibilityGroupForm extends EntityForm {
         '#title' => $this->t('Access Conditions'),
         '#open' => TRUE,
       ];
+      $form['access_section_section']['allow_other_conditions'] = array(
+        '#type' => 'checkbox',
+        '#title' => $this->t('Allow other Conditions on blocks'),
+        '#description' => $this->t('If this is unchecked blocks in this group will be able to have other visibility settings'),
+        '#default_value' => $block_visibility_group->isAllowOtherConditions(),
+       );
       $form['access_section_section']['add_condition'] = [
         '#type' => 'link',
         '#title' => $this->t('Add new access condition'),
@@ -95,7 +101,7 @@ class BlockVisibilityGroupForm extends EntityForm {
             'and' => $this->t('All conditions must pass'),
             'or' => $this->t('Only one condition must pass'),
           ],
-          '#default_value' => $this->entity->getAccessLogic(),
+          '#default_value' => $block_visibility_group->getAccessLogic(),
         ];
 
         $form['access_section_section']['access'] = [

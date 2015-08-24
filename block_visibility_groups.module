@@ -9,7 +9,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 /**
  * Implements hook_help().
  */
@@ -37,9 +38,23 @@ function block_visibility_groups_entity_type_alter(array &$entity_types) {
 /**
  * Implements hook_form_alter().
  */
-function block_visibility_groups_form_block_form_alter(&$form, &$form_state, $form_id) {
+function block_visibility_groups_form_block_form_alter(&$form,FormStateInterface &$form_state, $form_id) {
   $form['actions']['submit']['#submit'][] = 'block_visibility_groups_block_form_submit';
+  if (isset($form['visibility']['condition_group']['block_visibility_group']['#default_value']) &&
+    $form['visibility']['condition_group']['block_visibility_group']['#default_value']) {
+    /** @var EntityStorageInterface $storage */
+    $storage = \Drupal::getContainer()->get('entity.manager')->getStorage('block_visibility_group');
+    /** @var BlockVisibilityGroup $group */
+    $group = $storage->load($form['visibility']['condition_group']['block_visibility_group']['#default_value']);
+    if (!$group->isAllowOtherConditions()) {
+      _block_visibility_groups_remove_conditions($form['visibility']);
+    }
+  }
+}
 
+function _block_visibility_groups_remove_conditions(&$form) {
+  $keys = array_diff(array_keys($form), ['visibility_tabs', 'condition_group']);
+  $form = array_diff_key($form,array_flip($keys));
 }
 function block_visibility_groups_block_form_submit($form , FormStateInterface $form_state) {
   $redirect = $form_state->getRedirect();
