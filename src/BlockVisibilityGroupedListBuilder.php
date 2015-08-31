@@ -149,7 +149,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
 
   protected function buildBlocksForm() {
     $form = parent::buildBlocksForm();
-    if ($block_visibility_group = $this->getBlockVisibilityGroup()) {
+    if ($block_visibility_group = $this->getBlockVisibilityGroup(TRUE)) {
       foreach ($form as $row_key => &$row_info) {
         if (isset($row_info['title']['#url'])) {
           /** @var \Drupal\Core\Url $url */
@@ -176,14 +176,20 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
 
   }
 
-  protected function getBlockVisibilityGroup() {
-    return $this->request->query->get('block_visibility_group');
+  protected function getBlockVisibilityGroup($groups_only = FALSE) {
+    $group = $this->request->query->get('block_visibility_group');
+    if ($groups_only && in_array($group, [$this::ALL_GROUP, $this::UNSET_GROUP])) {
+      return NULL;
+    }
+    return $group;
   }
 
 
   protected function getEntityIds() {
     $entity_ids = parent::getEntityIds();
-    if ($current_block_visibility_group = $this->getCurrentBlockVisibilityGroup()) {
+    $current_block_visibility_group = $this->getCurrentBlockVisibilityGroup();
+    if (!empty($current_block_visibility_group)
+      && $current_block_visibility_group != $this::ALL_GROUP) {
       $entities = $this->storage->loadMultipleOverrideFree($entity_ids);
       /** @var Block $block */
       foreach ($entities as $block) {
@@ -203,7 +209,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
           unset($entity_ids[$block->id()]);
         }
       }
-  }
+    }
     return $entity_ids;
   }
 

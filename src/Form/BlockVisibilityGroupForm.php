@@ -68,7 +68,7 @@ class BlockVisibilityGroupForm extends EntityForm {
       $form['access_section_section']['allow_other_conditions'] = array(
         '#type' => 'checkbox',
         '#title' => $this->t('Allow other Conditions on blocks'),
-        '#description' => $this->t('If this is unchecked blocks in this group will be able to have other visibility settings'),
+        '#description' => $this->t('If checked blocks in this group will be able to have other visibility settings.'),
         '#default_value' => $block_visibility_group->isAllowOtherConditions(),
        );
       $form['access_section_section']['add_condition'] = [
