@@ -176,48 +176,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
 
     // If viewing all blocks, add a column indicating the visibility group.
     if ($this->getBlockVisibilityGroup() == static::ALL_GROUP) {
-      $entity_ids = [];
-      foreach ($form as $row_key => &$row) {
-        if (strpos($row_key, 'region-') !== 0) {
-          $entity_ids[] = $row_key;
-        }
-      }
-      $entities = $this->storage->loadMultipleOverrideFree($entity_ids);
-      if (!empty($entities)) {
-        $labels = $this->getBlockVisibilityLabels();
-        foreach ($entities as $block) {
-          if (!empty($form[$block->id()])) {
-            // Get visibility group label.
-            $visibility_group = $this->t('Global');
-            $conditions = $block->getVisibilityConditions();
-            if ($conditions->has('condition_group')) {
-              $condition_config = $conditions->get('condition_group')->getConfiguration();
-              $visibility_group = $labels[$condition_config['block_visibility_group']];
-            }
-            $row = &$form[$block->id()];
-            // Insert visibility group at correct position.
-            foreach (Element::Children($row) as $i => $child) {
-              $row[$child]['#weight'] = $i;
-            }
-            $row['block_visibility_group'] = [
-              '#markup' => $visibility_group,
-              '#weight' => 1.5,
-            ];
-            $row['#sorted'] = FALSE;
-          }
-        }
-        // Adjust header.
-        array_splice($form['#header'], 2, 0, array($this->t('Visibility group')));
-        // Increase colspan.
-        foreach (Element::children($form) as $child) {
-          foreach(Element::children($form[$child]) as $gchild) {
-            if (isset($form[$child][$gchild]['#wrapper_attributes']['colspan'])) {
-              $form[$child][$gchild]['#wrapper_attributes']['colspan'] =
-                $form[$child][$gchild]['#wrapper_attributes']['colspan'] + 1;
-            }
-          }
-        }
-      }
+      $this->addGroupColumn($form, $row);
     }
 
 
@@ -279,6 +238,56 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
     return !empty($this->block_visibility_group_storage->loadMultiple());
   }
 
-
+  /**
+   * Add Column to show Visibility Group
+   *
+   * @param $form
+   */
+  protected function addGroupColumn(&$form) {
+    $entity_ids = [];
+    foreach ($form as $row_key => &$row) {
+      if (strpos($row_key, 'region-') !== 0) {
+        $entity_ids[] = $row_key;
+      }
+    }
+    $entities = $this->storage->loadMultipleOverrideFree($entity_ids);
+    if (!empty($entities)) {
+      $labels = $this->getBlockVisibilityLabels();
+      /** @var Block $block */
+      foreach ($entities as $block) {
+        if (!empty($form[$block->id()])) {
+          // Get visibility group label.
+          $visibility_group = $this->t('Global');
+          $conditions = $block->getVisibilityConditions();
+          if ($conditions->has('condition_group')) {
+            $condition_config = $conditions->get('condition_group')
+              ->getConfiguration();
+            $visibility_group = $labels[$condition_config['block_visibility_group']];
+          }
+          $row = &$form[$block->id()];
+          // Insert visibility group at correct position.
+          foreach (Element::Children($row) as $i => $child) {
+            $row[$child]['#weight'] = $i;
+          }
+          $row['block_visibility_group'] = [
+            '#markup' => $visibility_group,
+            '#weight' => 1.5,
+          ];
+          $row['#sorted'] = FALSE;
+        }
+      }
+      // Adjust header.
+      array_splice($form['#header'], 2, 0, array($this->t('Visibility group')));
+      // Increase colspan.
+      foreach (Element::children($form) as $child) {
+        foreach (Element::children($form[$child]) as $gchild) {
+          if (isset($form[$child][$gchild]['#wrapper_attributes']['colspan'])) {
+            $form[$child][$gchild]['#wrapper_attributes']['colspan'] =
+              $form[$child][$gchild]['#wrapper_attributes']['colspan'] + 1;
+          }
+        }
+      }
+    }
+  }
 }
 
