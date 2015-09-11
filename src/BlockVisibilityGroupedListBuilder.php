@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Theme\ThemeManagerInterface;
@@ -125,8 +126,8 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
   protected function getBlockVisibilityGroupOptions() {
 
     $route_options = [
-      BlockVisibilityGroupedListBuilder::UNSET_GROUP => ['label' => $this->t('Unset Only')],
-      BlockVisibilityGroupedListBuilder::ALL_GROUP => ['label' => $this->t('All Blocks')],
+      BlockVisibilityGroupedListBuilder::UNSET_GROUP => ['label' => $this->t('- Global blocks -')],
+      BlockVisibilityGroupedListBuilder::ALL_GROUP => ['label' => $this->t('- All Blocks -')],
     ];
     $block_visibility_group_labels = $this->getBlockVisibilityLabels();
     foreach ($block_visibility_group_labels as $id => $label) {
@@ -169,8 +170,56 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
           //$query['block_visibility_group'] = $this->getBlockVisibilityGroup();
           //$url->setOption('query', $query);
         }
+
       }
     }
+
+    // If viewing all blocks, add a column indicating the visibility group.
+    if ($this->getBlockVisibilityGroup() == static::ALL_GROUP) {
+      $entity_ids = [];
+      foreach ($form as $row_key => &$row) {
+        if (strpos($row_key, 'region-') !== 0) {
+          $entity_ids[] = $row_key;
+        }
+      }
+      $entities = $this->storage->loadMultipleOverrideFree($entity_ids);
+      if (!empty($entities)) {
+        $labels = $this->getBlockVisibilityLabels();
+        foreach ($entities as $block) {
+          if (!empty($form[$block->id()])) {
+            // Get visibility group label.
+            $visibility_group = $this->t('Global');
+            $conditions = $block->getVisibilityConditions();
+            if ($conditions->has('condition_group')) {
+              $condition_config = $conditions->get('condition_group')->getConfiguration();
+              $visibility_group = $labels[$condition_config['block_visibility_group']];
+            }
+            $row = &$form[$block->id()];
+            // Insert visibility group at correct position.
+            foreach (Element::Children($row) as $i => $child) {
+              $row[$child]['#weight'] = $i;
+            }
+            $row['block_visibility_group'] = [
+              '#markup' => $visibility_group,
+              '#weight' => 1.5,
+            ];
+            $row['#sorted'] = FALSE;
+          }
+        }
+        // Adjust header.
+        array_splice($form['#header'], 2, 0, array($this->t('Visibility group')));
+        // Increase colspan.
+        foreach (Element::children($form) as $child) {
+          foreach(Element::children($form[$child]) as $gchild) {
+            if (isset($form[$child][$gchild]['#wrapper_attributes']['colspan'])) {
+              $form[$child][$gchild]['#wrapper_attributes']['colspan'] =
+                $form[$child][$gchild]['#wrapper_attributes']['colspan'] + 1;
+            }
+          }
+        }
+      }
+    }
+
 
     return $form;
 
