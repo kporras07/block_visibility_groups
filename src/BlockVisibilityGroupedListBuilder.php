@@ -1,8 +1,7 @@
 <?php
 /**
- * Author: Ted Bowman
- * Date: 8/22/15
- * Time: 6:22 PM
+ * @file
+ * Contains \Drupal\block_visibility_groups\BlockVisibilityGroupedListBuilder;
  */
 
 namespace Drupal\block_visibility_groups;
@@ -177,7 +176,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
 
     // If viewing all blocks, add a column indicating the visibility group.
     if ($this->getBlockVisibilityGroup() == static::ALL_GROUP) {
-      $this->addGroupColumn($form, $row);
+      $this->addGroupColumn($form);
     }
 
 
@@ -240,13 +239,13 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
   }
 
   /**
-   * Add Column to show Visibility Group
+   * Add Column to show Visibility Group.
    *
    * @param $form
    */
   protected function addGroupColumn(&$form) {
     $entity_ids = [];
-    foreach ($form as $row_key => &$row) {
+    foreach ($form as $row_key => $row) {
       if (strpos($row_key, 'region-') !== 0) {
         $entity_ids[] = $row_key;
       }
