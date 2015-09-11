@@ -9,18 +9,18 @@ namespace Drupal\block_visibility_groups;
 
 
 use Drupal\block\BlockListBuilder;
+use Drupal\block\Entity\Block;
+use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Drupal\block\Entity\Block;
-use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
+class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
 
   const UNSET_GROUP = 'UNSET-GROUP';
   const ALL_GROUP = 'ALL-GROUP';
@@ -30,6 +30,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $block_visibility_group_storage;
+
   /**
    * Constructs a new BlockVisibilityGroupedListBuilder object.
    *
@@ -57,6 +58,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
       $container->get('entity.manager')->getStorage('block_visibility_group')
     );
   }
+
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
@@ -82,7 +84,6 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
       '#title' => $this->t('Block Visibility Group'),
       '#options' => $options,
       '#default_value' => $default_value,
-
       // @todo Is there a better way to do this?
       '#attributes' => ['onchange' => 'this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value)'],
 
@@ -135,13 +136,13 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder{
     }
     foreach ($route_options as $key => &$route_option) {
 
-        $url = Url::fromRoute('block.admin_display_theme', [
-          'theme' => $this->theme,
-        ],
-          [
-            'query' => ['block_visibility_group' => $key]
-          ]
-        );
+      $url = Url::fromRoute('block.admin_display_theme', [
+        'theme' => $this->theme,
+      ],
+        [
+          'query' => ['block_visibility_group' => $key]
+        ]
+      );
       $route_option['path'] = $url->toString();
     }
 
