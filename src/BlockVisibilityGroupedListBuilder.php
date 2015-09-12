@@ -15,13 +15,20 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
 
+  /**
+   * Used in query string to denote blocks that don't have a group set.
+   */
   const UNSET_GROUP = 'UNSET-GROUP';
+  /**
+   * Used in Query string to denote showing all blocks.
+   */
   const ALL_GROUP = 'ALL-GROUP';
   /**
    * The entity storage class for Block Visibility Groups.
@@ -29,6 +36,11 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $block_visibility_group_storage;
+
+  /**
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
 
   /**
    * Constructs a new BlockVisibilityGroupedListBuilder object.
@@ -42,10 +54,11 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, EntityStorageInterface $block_visibility_group_storage) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, EntityStorageInterface $block_visibility_group_storage, StateInterface $state) {
     parent::__construct($entity_type, $storage, $theme_manager, $form_builder);
 
     $this->block_visibility_group_storage = $block_visibility_group_storage;
+    $this->state = $state;
   }
 
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
@@ -54,10 +67,14 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
       $container->get('entity.manager')->getStorage($entity_type->id()),
       $container->get('theme.manager'),
       $container->get('form_builder'),
-      $container->get('entity.manager')->getStorage('block_visibility_group')
+      $container->get('entity.manager')->getStorage('block_visibility_group'),
+      $container->get('state')
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
@@ -113,7 +130,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     $form['block_visibility_group']['block_visibility_group_show_global'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Show Global Blocks'),
-      '#default_value' => \Drupal::state()->get('block_visibility_group_show_global', 1),
+      '#default_value' => $this->getShowGlobalWithGroup(),
       '#description' => $this->t('Show global blocks when viewing a visibility group.'),
       '#attributes' => ['onchange' => 'this.form.submit()'],
     );
@@ -121,8 +138,12 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    \Drupal::state()->set('block_visibility_group_show_global', $form_state->getValue('block_visibility_group_show_global', 1));
+    $show_global = $form_state->getValue('block_visibility_group_show_global', 1);
+    $this->state->set('block_visibility_group_show_global', $show_global);
     parent::submitForm($form, $form_state);
   }
 
@@ -135,6 +156,15 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     return $request_id;
   }
 
+  /**
+   * Get Group options info to group select dropdown.
+   *
+   * @return array
+   *    Keys = Group keys
+   *    Values array with keys
+   *       label
+   *       path - URL to redirect to Group page.
+   */
   protected function getBlockVisibilityGroupOptions() {
 
     $route_options = [
@@ -160,9 +190,12 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     return $route_options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function buildBlocksForm() {
     $form = parent::buildBlocksForm();
-    $show_global_in_group = \Drupal::state()->get('block_visibility_group_show_global', 1);
+    $show_global_in_group = $this->getShowGlobalWithGroup();
     if ($block_visibility_group = $this->getBlockVisibilityGroup(TRUE)) {
       foreach ($form as $row_key => &$row_info) {
         if (isset($row_info['title']['#url'])) {
@@ -198,6 +231,15 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
 
   }
 
+  /**
+   * Get the Block Visibility Group for this page request.
+   *
+   * @param bool|FALSE $groups_only
+   *   Should this function return only group key
+   *   or also a constant value if no group
+   *
+   * @return string|null
+   */
   protected function getBlockVisibilityGroup($groups_only = FALSE) {
     $group = $this->request->query->get('block_visibility_group');
     if ($groups_only && in_array($group, [$this::ALL_GROUP, $this::UNSET_GROUP])) {
@@ -207,10 +249,15 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
   }
 
 
+  /**
+   * {@inheritdoc}
+   *
+   * Unset blocks that should not be shown with current group.
+   */
   protected function getEntityIds() {
     $entity_ids = parent::getEntityIds();
     $current_block_visibility_group = $this->getCurrentBlockVisibilityGroup();
-    $show_global_in_group = \Drupal::state()->get('block_visibility_group_show_global', 1);
+    $show_global_in_group = $this->getShowGlobalWithGroup();
     if (!empty($current_block_visibility_group)
       && $current_block_visibility_group != $this::ALL_GROUP) {
       $entities = $this->storage->loadMultipleOverrideFree($entity_ids);
@@ -238,7 +285,9 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
   }
 
   /**
-   * @return \Drupal\Core\Entity\EntityInterface[]
+   * Get Labels for groups.
+   *
+   * @return array
    */
   protected function getBlockVisibilityLabels() {
     $block_visibility_groups = $this->block_visibility_group_storage->loadMultiple();
@@ -250,6 +299,11 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     return $labels;
   }
 
+  /**
+   * Determine if any groups exist.
+   *
+   * @return bool
+   */
   protected function groupsExist() {
     return !empty($this->block_visibility_group_storage->loadMultiple());
   }
@@ -261,7 +315,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
    */
   protected function addGroupColumn(&$form) {
     $entity_ids = [];
-    foreach ($form as $row_key => $row) {
+    foreach (array_keys($form) as $row_key) {
       if (strpos($row_key, 'region-') !== 0) {
         $entity_ids[] = $row_key;
       }
@@ -304,6 +358,14 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
         }
       }
     }
+  }
+
+  /**
+   * Determine if Global(unset) blocks should be shown when viewing a group.
+   * @return mixed
+   */
+  protected function getShowGlobalWithGroup() {
+    return $this->state->get('block_visibility_group_show_global', 1);
   }
 }
 
