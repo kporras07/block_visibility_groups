@@ -85,7 +85,6 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
       '#default_value' => $default_value,
       // @todo Is there a better way to do this?
       '#attributes' => ['onchange' => 'this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value)'],
-
     );
     $description = $this->t('Block Visibility Groups allow you to control the visibility of multiple blocks in one place.');
 
@@ -111,9 +110,22 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     }
     $form['block_visibility_group']['select']['#description'] = $description;
 
+    $form['block_visibility_group']['block_visibility_group_show_global'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show Global Blocks'),
+      '#default_value' => \Drupal::state()->get('block_visibility_group_show_global', 1),
+      '#description' => $this->t('Show global blocks when viewing a visibility group.'),
+      '#attributes' => ['onchange' => 'this.form.submit()'],
+    );
 
     return $form;
   }
+
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    \Drupal::state()->set('block_visibility_group_show_global', $form_state->getValue('block_visibility_group_show_global', 1));
+    parent::submitForm($form, $form_state);
+  }
+
 
   protected function getCurrentBlockVisibilityGroup() {
     $request_id = $this->request->query->get('block_visibility_group');
@@ -150,6 +162,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
 
   protected function buildBlocksForm() {
     $form = parent::buildBlocksForm();
+    $show_global_in_group = \Drupal::state()->get('block_visibility_group_show_global', 1);
     if ($block_visibility_group = $this->getBlockVisibilityGroup(TRUE)) {
       foreach ($form as $row_key => &$row_info) {
         if (isset($row_info['title']['#url'])) {
@@ -175,7 +188,8 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     }
 
     // If viewing all blocks, add a column indicating the visibility group.
-    if ($this->getBlockVisibilityGroup() == static::ALL_GROUP) {
+    if ($this->getBlockVisibilityGroup() == static::ALL_GROUP
+      || $block_visibility_group && $show_global_in_group) {
       $this->addGroupColumn($form);
     }
 
@@ -196,6 +210,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
   protected function getEntityIds() {
     $entity_ids = parent::getEntityIds();
     $current_block_visibility_group = $this->getCurrentBlockVisibilityGroup();
+    $show_global_in_group = \Drupal::state()->get('block_visibility_group_show_global', 1);
     if (!empty($current_block_visibility_group)
       && $current_block_visibility_group != $this::ALL_GROUP) {
       $entities = $this->storage->loadMultipleOverrideFree($entity_ids);
@@ -208,12 +223,13 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
           $condition_config = $conditions->get('condition_group')->getConfiguration();
           $config_block_visibility_group = $condition_config['block_visibility_group'];
         }
-        if (BlockVisibilityGroupedListBuilder::UNSET_GROUP == $current_block_visibility_group) {
+        if (static::UNSET_GROUP == $current_block_visibility_group) {
           if (!empty($config_block_visibility_group)) {
             unset($entity_ids[$block->id()]);
           }
         }
-        elseif ($config_block_visibility_group != $current_block_visibility_group) {
+        elseif ($config_block_visibility_group != $current_block_visibility_group
+        && !(empty($config_block_visibility_group) && $show_global_in_group)) {
           unset($entity_ids[$block->id()]);
         }
       }
