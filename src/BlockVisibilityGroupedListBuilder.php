@@ -20,6 +20,9 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Extends BlockListBuilder to add our elements only show certain blocks.
+ */
 class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
 
   /**
@@ -61,6 +64,9 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     $this->state = $state;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
@@ -148,6 +154,11 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
   }
 
 
+  /**
+   * Get the group from the query string.
+   *
+   * @return mixed|string
+   */
   protected function getCurrentBlockVisibilityGroup() {
     $request_id = $this->request->query->get('block_visibility_group');
     if (!$request_id) {
@@ -361,7 +372,8 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
   }
 
   /**
-   * Determine if Global(unset) blocks should be shown when viewing a group.
+   * Determine if global(unset) blocks should be shown when viewing a group.
+   *
    * @return mixed
    */
   protected function getShowGlobalWithGroup() {
