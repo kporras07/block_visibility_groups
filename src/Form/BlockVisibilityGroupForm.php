@@ -58,10 +58,11 @@ class BlockVisibilityGroupForm extends EntityForm {
           'button',
           'button--small',
           'button-action',
+          'form-item',
         ]
       ]);
       $form['access_section_section'] = [
-        '#type' => 'details',
+        '#type' => 'fieldset',
         '#title' => $this->t('Access Conditions'),
         '#open' => TRUE,
       ];
