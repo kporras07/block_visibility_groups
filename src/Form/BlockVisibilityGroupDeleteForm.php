@@ -59,18 +59,16 @@ class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
         default:
           $this->setBlocksGroup($blocks, $blocks_op);
       }
-
-
     }
     $this->entity->delete();
 
     drupal_set_message(
-      $this->t('content @type: deleted @label.',
+      $this->t('Deleted @type:  @label.',
         [
-          '@type' => $this->entity->bundle(),
+          '@type' => $this->entity->getEntityType()->getLabel(),
           '@label' => $this->entity->label()
         ]
-        )
+      )
     );
 
     $form_state->setRedirectUrl($this->getCancelUrl());
