@@ -24,6 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Extends BlockListBuilder to add our elements only show certain blocks.
  */
 class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
+  use BlockVisibilityLister;
 
   /**
    * Used in query string to denote blocks that don't have a group set.
@@ -38,7 +39,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $block_visibility_group_storage;
+  protected $group_storage;
 
   /**
    * @var \Drupal\Core\State\StateInterface
@@ -60,7 +61,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
   public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, EntityStorageInterface $block_visibility_group_storage, StateInterface $state) {
     parent::__construct($entity_type, $storage, $theme_manager, $form_builder);
 
-    $this->block_visibility_group_storage = $block_visibility_group_storage;
+    $this->group_storage = $block_visibility_group_storage;
     $this->state = $state;
   }
 
@@ -121,7 +122,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     }
     else {
       if ($current_block_visibility_group) {
-        $group = $this->block_visibility_group_storage->load($current_block_visibility_group);
+        $group = $this->group_storage->load($current_block_visibility_group);
         $url_info = $group->urlInfo('edit-form');
         $form['block_visibility_group']['edit'] = array(
           '#type' => 'link',
@@ -182,7 +183,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
       BlockVisibilityGroupedListBuilder::UNSET_GROUP => ['label' => $this->t('- Global blocks -')],
       BlockVisibilityGroupedListBuilder::ALL_GROUP => ['label' => $this->t('- All Blocks -')],
     ];
-    $block_visibility_group_labels = $this->getBlockVisibilityLabels();
+    $block_visibility_group_labels = $this->getBlockVisibilityLabels($this->group_storage);
     foreach ($block_visibility_group_labels as $id => $label) {
       $route_options[$id] = ['label' => $label];
     }
@@ -274,13 +275,8 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
       $entities = $this->storage->loadMultipleOverrideFree($entity_ids);
       /** @var Block $block */
       foreach ($entities as $block) {
-        /** @var ConditionPluginCollection $conditions */
-        $conditions = $block->getVisibilityConditions();
-        $config_block_visibility_group = '';
-        if ($conditions->has('condition_group')) {
-          $condition_config = $conditions->get('condition_group')->getConfiguration();
-          $config_block_visibility_group = $condition_config['block_visibility_group'];
-        }
+        $config_block_visibility_group = $this->getGroupForBlock($block);
+
         if (static::UNSET_GROUP == $current_block_visibility_group) {
           if (!empty($config_block_visibility_group)) {
             unset($entity_ids[$block->id()]);
@@ -296,27 +292,12 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
   }
 
   /**
-   * Get Labels for groups.
-   *
-   * @return array
-   */
-  protected function getBlockVisibilityLabels() {
-    $block_visibility_groups = $this->block_visibility_group_storage->loadMultiple();
-    $labels = [];
-    foreach ($block_visibility_groups as $type) {
-
-      $labels[$type->id()] = $type->label();
-    }
-    return $labels;
-  }
-
-  /**
    * Determine if any groups exist.
    *
    * @return bool
    */
   protected function groupsExist() {
-    return !empty($this->block_visibility_group_storage->loadMultiple());
+    return !empty($this->group_storage->loadMultiple());
   }
 
   /**
@@ -333,7 +314,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     }
     $entities = $this->storage->loadMultipleOverrideFree($entity_ids);
     if (!empty($entities)) {
-      $labels = $this->getBlockVisibilityLabels();
+      $labels = $this->getBlockVisibilityLabels($this->group_storage);
       /** @var Block $block */
       foreach ($entities as $block) {
         if (!empty($form[$block->id()])) {
@@ -343,7 +324,10 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
           if ($conditions->has('condition_group')) {
             $condition_config = $conditions->get('condition_group')
               ->getConfiguration();
-            $visibility_group = $labels[$condition_config['block_visibility_group']];
+            if (isset($labels[$condition_config['block_visibility_group']])) {
+              $visibility_group = $labels[$condition_config['block_visibility_group']];
+            }
+
           }
           $row = &$form[$block->id()];
           // Insert visibility group at correct position.
