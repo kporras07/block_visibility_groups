@@ -85,7 +85,7 @@ class BlockVisibilityGroupForm extends EntityForm {
           ],
         ],
       ];
-      if ($access_conditions = $block_visibility_group->getAccessConditions()) {
+      if ($access_conditions = $block_visibility_group->getConditions()) {
         $form['access_section_section']['access_section'] = [
           '#type' => 'table',
           '#header' => [

@@ -79,7 +79,7 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
    */
   public function getPluginCollections() {
     return [
-      'access_conditions' => $this->getAccessConditions(),
+      'access_conditions' => $this->getConditions(),
     ];
   }
   /**
@@ -130,7 +130,7 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
    * @return \Drupal\Core\Condition\ConditionInterface[]|\Drupal\Core\Condition\ConditionPluginCollection
    *   An array of configured condition plugins.
    */
-  public function getAccessConditions() {
+  public function getConditions() {
     if (!$this->accessConditionCollection) {
       $this->accessConditionCollection = new ConditionPluginCollection(\Drupal::service('plugin.manager.condition'), $this->get('access_conditions'));
     }
@@ -140,23 +140,23 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
   /**
    * {@inheritdoc}
    */
-  public function getAccessCondition($condition_id) {
-    return $this->getAccessConditions()->get($condition_id);
+  public function getCondition($condition_id) {
+    return $this->getConditions()->get($condition_id);
   }
   /**
    * {@inheritdoc}
    */
-  public function addAccessCondition(array $configuration) {
+  public function addCondition(array $configuration) {
     $configuration['uuid'] = $this->uuidGenerator()->generate();
-    $this->getAccessConditions()->addInstanceId($configuration['uuid'], $configuration);
+    $this->getConditions()->addInstanceId($configuration['uuid'], $configuration);
     return $configuration['uuid'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function removeAccessCondition($condition_id) {
-    $this->getAccessConditions()->removeInstanceId($condition_id);
+  public function removeCondition($condition_id) {
+    $this->getConditions()->removeInstanceId($condition_id);
     return $this;
   }
 

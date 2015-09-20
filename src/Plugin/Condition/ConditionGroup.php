@@ -83,7 +83,7 @@ class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPlug
     /** @var BlockVisibilityGroup $block_visibility_group */
     $block_visibility_group = $this->entityStorage->load($block_visibility_group_id);
     /** @var ConditionPluginCollection $access_conditions */
-    $access_conditions = $block_visibility_group->getAccessConditions();
+    $access_conditions = $block_visibility_group->getConditions();
     if ($this->applyContexts($access_conditions)) {
       return $this->resolveConditions($access_conditions, $block_visibility_group->getAccessLogic());
     }

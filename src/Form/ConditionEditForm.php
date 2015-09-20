@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\block_visibility_groups\Form\AccessConditionEditForm.
+ * Contains \Drupal\block_visibility_groups\Form\ConditionEditForm.
  */
 
 namespace Drupal\block_visibility_groups\Form;
@@ -10,7 +10,7 @@ namespace Drupal\block_visibility_groups\Form;
 /**
  * Provides a form for editing an access condition.
  */
-class AccessConditionEditForm extends AccessConditionFormBase {
+class ConditionEditForm extends ConditionFormBase {
 
   /**
    * {@inheritdoc}
@@ -24,7 +24,7 @@ class AccessConditionEditForm extends AccessConditionFormBase {
    */
   protected function prepareCondition($condition_id) {
     // Load the access condition directly from the block_visibility_group entity.
-    return $this->block_visibility_group->getAccessCondition($condition_id);
+    return $this->block_visibility_group->getCondition($condition_id);
   }
 
   /**

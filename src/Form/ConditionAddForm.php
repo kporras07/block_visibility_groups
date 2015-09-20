@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains   \Drupal\block_visibility_groups\Form\AccessConditionAddForm.
+ * Contains   \Drupal\block_visibility_groups\Form\ConditionAddForm.
  */
 
 namespace Drupal\block_visibility_groups\Form;
@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a form for adding a new access condition.
  */
-class AccessConditionAddForm extends AccessConditionFormBase {
+class ConditionAddForm extends ConditionFormBase {
 
   /**
    * The condition manager.
@@ -24,7 +24,7 @@ class AccessConditionAddForm extends AccessConditionFormBase {
   protected $conditionManager;
 
   /**
-   * Constructs a new AccessConditionAddForm.
+   * Constructs a new ConditionAddForm.
    *
    * @param \Drupal\Core\Condition\ConditionManager $condition_manager
    *   The condition manager.

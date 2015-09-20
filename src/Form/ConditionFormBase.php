@@ -140,6 +140,17 @@ abstract class ConditionFormBase extends FormBase {
 
     // Set the submission message.
     drupal_set_message($this->submitMessageText());
+
+    $configuration = $this->condition->getConfiguration();
+    // If this access condition is new, add it to the block_visibility_group.
+    if (!isset($configuration['uuid'])) {
+      $this->block_visibility_group->addCondition($configuration);
+    }
+
+    // Save the block_visibility_group entity.
+    $this->block_visibility_group->save();
+
+    $form_state->setRedirectUrl($this->block_visibility_group->urlInfo('edit-form'));
   }
 
 }

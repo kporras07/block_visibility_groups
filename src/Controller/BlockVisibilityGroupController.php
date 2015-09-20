@@ -65,7 +65,7 @@ class BlockVisibilityGroupController extends ControllerBase {
    * @return array
    *   The access condition selection page.
    */
-  public function selectAccessCondition(BlockVisibilityGroup $block_visibility_group) {
+  public function selectCondition(BlockVisibilityGroup $block_visibility_group) {
     $build = [
       '#theme' => 'links',
       '#links' => [],
