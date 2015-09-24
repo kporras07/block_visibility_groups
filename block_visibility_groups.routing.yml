@@ -35,36 +35,40 @@ entity.block_visibility_group.delete_form:
 #### Access Conditions
 
 block_visibility_groups.access_condition_select:
-  path: 'admin/structure/block/block-visibility-group/{block_visibility_group}/access/select'
+  path: 'admin/structure/block/block-visibility-group/{block_visibility_group}/access/select/{redirect}'
   defaults:
     _controller: '\Drupal\block_visibility_groups\Controller\BlockVisibilityGroupController::selectCondition'
-    _title: 'Select access condition'
+    _title:
+    redirect: 'edit'
   requirements:
     _permission: 'administer blocks'
 
 block_visibility_groups.access_condition_add:
-  path: '/admin/structure/block-visibility-group/manage/{block_visibility_group}/access/add/{condition_id}'
+  path: '/admin/structure/block-visibility-group/manage/{block_visibility_group}/access/add/{condition_id}/{redirect}'
   defaults:
     _form: '\Drupal\block_visibility_groups\Form\ConditionAddForm'
     _title: 'Add new access condition'
+    redirect: 'edit'
   requirements:
     _permission: 'administer blocks'
 
 block_visibility_groups.access_condition_edit:
-  path: '/admin/structure/block-visibility-groups/manage/{block_visibility_group}/access/edit/{condition_id}'
+  path: '/admin/structure/block-visibility-groups/manage/{block_visibility_group}/access/edit/{condition_id}/{redirect}'
   defaults:
     _form: '\Drupal\block_visibility_groups\Form\ConditionEditForm'
     _title: 'Edit Access Condition'
+    redirect: 'edit'
     # @todo Create title callback.
     #_title_callback: '\Drupal\block_visibility_groups\Controller\BlockVisibilityGroupController::editConditionTitle'
   requirements:
     _permission: 'administer blocks'
 
 block_visibility_groups.access_condition_delete:
-  path: '/admin/structure/block-visibility-groups/manage/{block_visibility_group}/access/delete/{condition_id}'
+  path: '/admin/structure/block-visibility-groups/manage/{block_visibility_group}/access/delete/{condition_id}/{redirect}'
   defaults:
     _form: '\Drupal\block_visibility_groups\Form\ConditionDeleteForm'
     _title: 'Delete access condition'
+    redirect: 'edit'
   requirements:
     _permission: 'administer blocks'
 

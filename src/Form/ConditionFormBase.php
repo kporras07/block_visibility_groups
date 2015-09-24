@@ -92,9 +92,13 @@ abstract class ConditionFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, BlockVisibilityGroupInterface $block_visibility_group = NULL, $condition_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, BlockVisibilityGroupInterface $block_visibility_group = NULL, $condition_id = NULL, $redirect = NULL) {
     $this->block_visibility_group = $block_visibility_group;
     $this->condition = $this->prepareCondition($condition_id);
+    $form['bvg_redirect'] = [
+      '#type' => 'value',
+      '#value' => $redirect,
+    ];
     // Store the gathered contexts in the form state for other objects to use
     // during form building.
     $form_state->setTemporaryValue('gathered_contexts', $this->contextRepository->getAvailableContexts());
@@ -150,7 +154,20 @@ abstract class ConditionFormBase extends FormBase {
     // Save the block_visibility_group entity.
     $this->block_visibility_group->save();
 
-    $form_state->setRedirectUrl($this->block_visibility_group->urlInfo('edit-form'));
+    $redirect = $form_state->getValue('bvg_redirect');
+    if ($redirect == 'edit') {
+      $form_state->setRedirectUrl($this->block_visibility_group->urlInfo('edit-form'));
+    }
+    elseif ($redirect == 'layout') {
+
+      $form_state->setRedirect(
+        'block.admin_display',
+        array(),
+        ['query' => ['block_visibility_group' => $this->block_visibility_group->id()]]
+
+      );
+    }
+
   }
 
 }

@@ -25,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
   use BlockVisibilityLister;
+  use ConditionsSetForm;
 
   /**
    * Used in query string to denote blocks that don't have a group set.
@@ -112,6 +113,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     );
     $description = $this->t('Block Visibility Groups allow you to control the visibility of multiple blocks in one place.');
 
+
     if (!$this->groupsExist()) {
       $description .= ' ' . $this->t('No Groups have been created yet.');
       $form['block_visibility_group']['create'] = array(
@@ -123,24 +125,37 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     else {
       if ($current_block_visibility_group) {
         $group = $this->group_storage->load($current_block_visibility_group);
+        $conditions_element = $this->createConditionsSet($form, $group, 'layout');
+        $conditions_element['#type'] = 'details';
+        if ($this->request->query->get('show_conditions')) {
+          $conditions_element['#open'] = TRUE;
+        }
+        else {
+          $conditions_element['#open'] = FALSE;
+        }
+
+        $form['block_visibility_group']['access_section_section'] = $conditions_element;
+
         $url_info = $group->urlInfo('edit-form');
         $form['block_visibility_group']['edit'] = array(
           '#type' => 'link',
           '#title' => t('Edit current Group'),
           '#url' => $url_info,
         );
+
+        $form['block_visibility_group']['block_visibility_group_show_global'] = array(
+          '#type' => 'checkbox',
+          '#title' => $this->t('Show Global Blocks'),
+          '#default_value' => $this->getShowGlobalWithGroup(),
+          '#description' => $this->t('Show global blocks when viewing a visibility group.'),
+          '#attributes' => ['onchange' => 'this.form.submit()'],
+        );
       }
 
     }
     $form['block_visibility_group']['select']['#description'] = $description;
 
-    $form['block_visibility_group']['block_visibility_group_show_global'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Show Global Blocks'),
-      '#default_value' => $this->getShowGlobalWithGroup(),
-      '#description' => $this->t('Show global blocks when viewing a visibility group.'),
-      '#attributes' => ['onchange' => 'this.form.submit()'],
-    );
+
 
     return $form;
   }

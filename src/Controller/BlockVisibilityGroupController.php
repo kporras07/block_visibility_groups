@@ -65,7 +65,7 @@ class BlockVisibilityGroupController extends ControllerBase {
    * @return array
    *   The access condition selection page.
    */
-  public function selectCondition(BlockVisibilityGroup $block_visibility_group) {
+  public function selectCondition(BlockVisibilityGroup $block_visibility_group, $redirect) {
     $build = [
       '#theme' => 'links',
       '#links' => [],
@@ -79,6 +79,8 @@ class BlockVisibilityGroupController extends ControllerBase {
         'url' => Url::fromRoute('block_visibility_groups.access_condition_add', [
           'block_visibility_group' => $block_visibility_group->id(),
           'condition_id' => $access_id,
+          'redirect' => $redirect,
+
         ]),
         'attributes' => [
           'class' => ['use-ajax'],

@@ -7,12 +7,9 @@
 
 namespace Drupal\block_visibility_groups\Form;
 
-use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\block_visibility_groups\ConditionsSetForm;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 
 /**
@@ -21,6 +18,8 @@ use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
  * @package Drupal\block_visibility_groups\Form
  */
 class BlockVisibilityGroupForm extends EntityForm {
+
+  use ConditionsSetForm;
   /**
    * {@inheritdoc}
    */
@@ -45,97 +44,23 @@ class BlockVisibilityGroupForm extends EntityForm {
       ),
       '#disabled' => !$block_visibility_group->isNew(),
     );
+    $form['allow_other_conditions'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Allow other Conditions on blocks'),
+      '#description' => $this->t('If checked blocks in this group will be able to have other visibility settings.'),
+      '#default_value' => $block_visibility_group->isAllowOtherConditions(),
+    );
+
+    $form['access_logic'] = [
+      '#type' => 'radios',
+      '#options' => [
+        'and' => $this->t('All conditions must pass'),
+        'or' => $this->t('Only one condition must pass'),
+      ],
+      '#default_value' => $block_visibility_group->getAccessLogic(),
+    ];
     if (!$block_visibility_group->isNew()) {
-      $attributes = [
-        'class' => ['use-ajax'],
-        'data-dialog-type' => 'modal',
-        'data-dialog-options' => Json::encode([
-          'width' => 'auto',
-        ]),
-      ];
-      $add_button_attributes = NestedArray::mergeDeep($attributes, [
-        'class' => [
-          'button',
-          'button--small',
-          'button-action',
-          'form-item',
-        ]
-      ]);
-      $form['access_section_section'] = [
-        '#type' => 'fieldset',
-        '#title' => $this->t('Access Conditions'),
-        '#open' => TRUE,
-      ];
-      $form['access_section_section']['allow_other_conditions'] = array(
-        '#type' => 'checkbox',
-        '#title' => $this->t('Allow other Conditions on blocks'),
-        '#description' => $this->t('If checked blocks in this group will be able to have other visibility settings.'),
-        '#default_value' => $block_visibility_group->isAllowOtherConditions(),
-       );
-      $form['access_section_section']['add_condition'] = [
-        '#type' => 'link',
-        '#title' => $this->t('Add new access condition'),
-        '#url' => Url::fromRoute('block_visibility_groups.access_condition_select', [
-          'block_visibility_group' => $this->entity->id(),
-        ]),
-        '#attributes' => $add_button_attributes,
-        '#attached' => [
-          'library' => [
-            'core/drupal.ajax',
-          ],
-        ],
-      ];
-      if ($access_conditions = $block_visibility_group->getConditions()) {
-        $form['access_section_section']['access_section'] = [
-          '#type' => 'table',
-          '#header' => [
-            $this->t('Label'),
-            $this->t('Description'),
-            $this->t('Operations'),
-          ],
-          '#empty' => $this->t('There are no access conditions.'),
-        ];
-
-        $form['access_section_section']['access_logic'] = [
-          '#type' => 'radios',
-          '#options' => [
-            'and' => $this->t('All conditions must pass'),
-            'or' => $this->t('Only one condition must pass'),
-          ],
-          '#default_value' => $block_visibility_group->getAccessLogic(),
-        ];
-
-        $form['access_section_section']['access'] = [
-          '#tree' => TRUE,
-        ];
-        foreach ($access_conditions as $access_id => $access_condition) {
-          $row = [];
-          $row['label']['#markup'] = $access_condition->getPluginDefinition()['label'];
-          $row['description']['#markup'] = $access_condition->summary();
-          $operations = [];
-          $operations['edit'] = [
-            'title' => $this->t('Edit'),
-            'url' => Url::fromRoute('block_visibility_groups.access_condition_edit', [
-              'block_visibility_group' => $this->entity->id(),
-              'condition_id' => $access_id,
-            ]),
-            'attributes' => $attributes,
-          ];
-          $operations['delete'] = [
-            'title' => $this->t('Delete'),
-            'url' => Url::fromRoute('block_visibility_groups.access_condition_delete', [
-              'block_visibility_group' => $this->entity->id(),
-              'condition_id' => $access_id,
-            ]),
-            'attributes' => $attributes,
-          ];
-          $row['operations'] = [
-            '#type' => 'operations',
-            '#links' => $operations,
-          ];
-          $form['access_section_section']['access_section'][$access_id] = $row;
-        }
-      }
+      $form['access_section_section'] = $this->createConditionsSet($form, $block_visibility_group);
     }
 
     /* You will need additional form elements for your custom properties. */
@@ -162,5 +87,7 @@ class BlockVisibilityGroupForm extends EntityForm {
     }
     $form_state->setRedirectUrl($block_visibility_group->urlInfo('collection'));
   }
+
+
 
 }
