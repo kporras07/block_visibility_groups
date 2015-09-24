@@ -159,11 +159,15 @@ abstract class ConditionFormBase extends FormBase {
       $form_state->setRedirectUrl($this->block_visibility_group->urlInfo('edit-form'));
     }
     elseif ($redirect == 'layout') {
+      $query = [
+        'block_visibility_group' => $this->block_visibility_group->id(),
+        'show_conditions' => 1,
+      ];
 
       $form_state->setRedirect(
         'block.admin_display',
         array(),
-        ['query' => ['block_visibility_group' => $this->block_visibility_group->id()]]
+        ['query' => $query]
 
       );
     }
