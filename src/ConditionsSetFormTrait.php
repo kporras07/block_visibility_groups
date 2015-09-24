@@ -14,7 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
 
-trait ConditionsSetForm {
+trait ConditionsSetFormTrait {
 
   use StringTranslationTrait;
   /**

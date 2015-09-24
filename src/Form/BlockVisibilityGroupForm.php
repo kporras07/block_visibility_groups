@@ -7,7 +7,7 @@
 
 namespace Drupal\block_visibility_groups\Form;
 
-use Drupal\block_visibility_groups\ConditionsSetForm;
+use Drupal\block_visibility_groups\ConditionsSetFormTrait;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
@@ -19,7 +19,7 @@ use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
  */
 class BlockVisibilityGroupForm extends EntityForm {
 
-  use ConditionsSetForm;
+  use ConditionsSetFormTrait;
   /**
    * {@inheritdoc}
    */

@@ -8,6 +8,7 @@ namespace Drupal\block_visibility_groups;
 
 
 use Drupal\block\BlockListBuilder;
+use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -25,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
   use BlockVisibilityLister;
-  use ConditionsSetForm;
+  use ConditionsSetFormTrait;
 
   /**
    * Used in query string to denote blocks that don't have a group set.
@@ -124,7 +125,19 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     }
     else {
       if ($current_block_visibility_group) {
+
+        $form['block_visibility_group']['block_visibility_group_show_global'] = array(
+          '#type' => 'checkbox',
+          '#title' => $this->t('Show Global Blocks'),
+          '#default_value' => $this->getShowGlobalWithGroup(),
+          '#description' => $this->t('Show global blocks when viewing a visibility group.'),
+          '#attributes' => ['onchange' => 'this.form.submit()'],
+        );
+
+        /** @var \Drupal\block_visibility_groups\Entity\BlockVisibilityGroup $group */
         $group = $this->group_storage->load($current_block_visibility_group);
+        $form['block_visibility_group']['help'] = $this->createHelp($group);
+
         $conditions_element = $this->createConditionsSet($form, $group, 'layout');
         $conditions_element['#type'] = 'details';
         if ($this->request->query->get('show_conditions')) {
@@ -136,20 +149,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
 
         $form['block_visibility_group']['access_section_section'] = $conditions_element;
 
-        $url_info = $group->urlInfo('edit-form');
-        $form['block_visibility_group']['edit'] = array(
-          '#type' => 'link',
-          '#title' => t('Edit current Group'),
-          '#url' => $url_info,
-        );
 
-        $form['block_visibility_group']['block_visibility_group_show_global'] = array(
-          '#type' => 'checkbox',
-          '#title' => $this->t('Show Global Blocks'),
-          '#default_value' => $this->getShowGlobalWithGroup(),
-          '#description' => $this->t('Show global blocks when viewing a visibility group.'),
-          '#attributes' => ['onchange' => 'this.form.submit()'],
-        );
       }
 
     }
@@ -377,6 +377,45 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
    */
   protected function getShowGlobalWithGroup() {
     return $this->state->get('block_visibility_group_show_global', 1);
+  }
+
+  /**
+   * @param array $form
+   * @param $group
+   *
+   * @return array
+   */
+  protected function createHelp(BlockVisibilityGroup $group) {
+    $help = '<strong>' . $this->t('Currently viewing') . ': <em>' . $group->label() . '</em></strong>';
+    if ($group->getAccessLogic() == 'and') {
+      $help .= '<p>' . $this->t('All conditions must pass.') . '</p>';
+    }
+    else {
+      $help .= '<p>' . $this->t('Only one condition must pass.') . '</p>';
+    }
+
+    if ($group->isAllowOtherConditions()) {
+      $help .= '<p>' . $this->t('Blocks in this group may have other conditions.') . '</p>';
+    }
+    else {
+      $help .= '<p>' . $this->t('Blocks in this group may <strong>not</strong> have other conditions.') . '</p>';
+    }
+
+    $help_group = [
+      '#type' => 'details',
+      '#open' => FALSE,
+      '#title' => $this->t('Group Settings'),
+      'text' => [
+        '#type' => 'markup',
+        '#markup' => $help,
+      ],
+      'edit' => [
+        '#type' => 'link',
+        '#title' => t('Edit Group Settings'),
+        '#url' => $group->urlInfo('edit-form'),
+      ],
+    ];
+    return $help_group;
   }
 }
 
