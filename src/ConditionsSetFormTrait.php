@@ -39,16 +39,16 @@ trait ConditionsSetFormTrait {
         'form-item',
       ]
     ]);
-    $form['access_section_section'] = [
+    $form['conditions_section'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Access Conditions'),
+      '#title' => $this->t('Conditions'),
       '#open' => TRUE,
     ];
 
-    $form['access_section_section']['add_condition'] = [
+    $form['conditions_section']['add_condition'] = [
       '#type' => 'link',
-      '#title' => $this->t('Add new access condition'),
-      '#url' => Url::fromRoute('block_visibility_groups.access_condition_select', [
+      '#title' => $this->t('Add new condition'),
+      '#url' => Url::fromRoute('block_visibility_groups.condition_select', [
         'block_visibility_group' => $block_visibility_group->id(),
         'redirect' => $redirect,
       ]),
@@ -59,41 +59,37 @@ trait ConditionsSetFormTrait {
         ],
       ],
     ];
-    if ($access_conditions = $block_visibility_group->getConditions()) {
-      $form['access_section_section']['access_section'] = [
+    if ($conditions = $block_visibility_group->getConditions()) {
+      $form['conditions_section']['conditions'] = [
         '#type' => 'table',
         '#header' => [
           $this->t('Label'),
           $this->t('Description'),
           $this->t('Operations'),
         ],
-        '#empty' => $this->t('There are no access conditions.'),
+        '#empty' => $this->t('There are no conditions.'),
       ];
 
 
-
-      $form['access_section_section']['access'] = [
-        '#tree' => TRUE,
-      ];
-      foreach ($access_conditions as $access_id => $access_condition) {
+      foreach ($conditions as $condition_id => $condition) {
         $row = [];
-        $row['label']['#markup'] = $access_condition->getPluginDefinition()['label'];
-        $row['description']['#markup'] = $access_condition->summary();
+        $row['label']['#markup'] = $condition->getPluginDefinition()['label'];
+        $row['description']['#markup'] = $condition->summary();
         $operations = [];
         $operations['edit'] = [
           'title' => $this->t('Edit'),
-          'url' => Url::fromRoute('block_visibility_groups.access_condition_edit', [
+          'url' => Url::fromRoute('block_visibility_groups.condition_edit', [
             'block_visibility_group' => $block_visibility_group->id(),
-            'condition_id' => $access_id,
+            'condition_id' => $condition_id,
             'redirect' => $redirect,
           ]),
           'attributes' => $attributes,
         ];
         $operations['delete'] = [
           'title' => $this->t('Delete'),
-          'url' => Url::fromRoute('block_visibility_groups.access_condition_delete', [
+          'url' => Url::fromRoute('block_visibility_groups.condition_delete', [
             'block_visibility_group' => $block_visibility_group->id(),
-            'condition_id' => $access_id,
+            'condition_id' => $condition_id,
             'redirect' => $redirect,
           ]),
           'attributes' => $attributes,
@@ -102,9 +98,9 @@ trait ConditionsSetFormTrait {
           '#type' => 'operations',
           '#links' => $operations,
         ];
-        $form['access_section_section']['access_section'][$access_id] = $row;
+        $form['conditions_section']['conditions'][$condition_id] = $row;
       }
     }
-    return $form['access_section_section'];
+    return $form['conditions_section'];
   }
 }

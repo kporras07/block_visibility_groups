@@ -10,15 +10,15 @@ block_visibility_groups.block_visibility_group.*:
       label: 'Label'
     uuid:
       type: string
-    access_logic:
+    logic:
       type: string
-      label: 'Access logic'
-    access_conditions:
+      label: 'Logic'
+    conditions:
       type: sequence
-      label: 'Access Conditions'
+      label: 'Conditions'
       sequence:
         - type: condition.plugin.[id]
-          label: 'Access Condition'
+          label: 'Condition'
     allow_other_conditions:
       type: boolean
       label: 'Allow Other Conditions'

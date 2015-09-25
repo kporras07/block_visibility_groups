@@ -51,18 +51,18 @@ class BlockVisibilityGroupForm extends EntityForm {
       '#default_value' => $block_visibility_group->isAllowOtherConditions(),
     );
 
-    $form['access_logic'] = [
+    $form['logic'] = [
       '#type' => 'radios',
       '#options' => [
         'and' => $this->t('All conditions must pass'),
         'or' => $this->t('Only one condition must pass'),
       ],
-      '#default_value' => $block_visibility_group->getAccessLogic(),
+      '#default_value' => $block_visibility_group->getLogic(),
     ];
     if (!$block_visibility_group->isNew()) {
-      $form['access_section_section'] = $this->createConditionsSet($form, $block_visibility_group);
-    }
+      $form['conditions_section'] = $this->createConditionsSet($form, $block_visibility_group, 'edit');
 
+    }
     /* You will need additional form elements for your custom properties. */
 
     return $form;

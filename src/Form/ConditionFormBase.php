@@ -147,7 +147,7 @@ abstract class ConditionFormBase extends FormBase {
     drupal_set_message($this->submitMessageText());
 
     $configuration = $this->condition->getConfiguration();
-    // If this access condition is new, add it to the block_visibility_group.
+    // If this condition is new, add it to the block_visibility_group.
     if (!isset($configuration['uuid'])) {
       $this->block_visibility_group->addCondition($configuration);
     }

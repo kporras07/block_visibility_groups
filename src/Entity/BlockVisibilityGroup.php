@@ -35,8 +35,8 @@ use Drupal\block_visibility_groups\BlockVisibilityGroupInterface;
  *   config_export = {
  *     "id",
  *     "label",
- *     "access_logic",
- *     "access_conditions",
+ *     "logic",
+ *     "conditions",
  *     "allow_other_conditions",
  *   },
  *   links = {
@@ -79,7 +79,7 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
    */
   public function getPluginCollections() {
     return [
-      'access_conditions' => $this->getConditions(),
+      'conditions' => $this->getConditions(),
     ];
   }
   /**
@@ -90,39 +90,39 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
   protected $label;
 
   /**
-   * The configuration of access conditions.
+   * The configuration of conditions.
    *
    * @var array
    */
-  protected $access_conditions = [];
+  protected $conditions = [];
 
   /**
-   * Tracks the logic used to compute access, either 'and' or 'or'.
+   * Tracks the logic used to compute, either 'and' or 'or'.
    *
    * @var string
    */
-  protected $access_logic = 'and';
+  protected $logic = 'and';
 
   /**
    * @return string
    */
-  public function getAccessLogic() {
-    return $this->access_logic;
+  public function getLogic() {
+    return $this->logic;
   }
 
   /**
-   * @param string $access_logic
+   * @param string $logic
    */
-  public function setAccessLogic($access_logic) {
-    $this->access_logic = $access_logic;
+  public function setLogic($logic) {
+    $this->logic = $logic;
   }
 
   /**
-   * The plugin collection that holds the access conditions.
+   * The plugin collection that holds the conditions.
    *
    * @var \Drupal\Component\Plugin\LazyPluginCollection
    */
-  protected $accessConditionCollection;
+  protected $conditionCollection;
 
   /**
    * Returns the conditions.
@@ -131,10 +131,10 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
    *   An array of configured condition plugins.
    */
   public function getConditions() {
-    if (!$this->accessConditionCollection) {
-      $this->accessConditionCollection = new ConditionPluginCollection(\Drupal::service('plugin.manager.condition'), $this->get('access_conditions'));
+    if (!$this->conditionCollection) {
+      $this->conditionCollection = new ConditionPluginCollection(\Drupal::service('plugin.manager.condition'), $this->get('conditions'));
     }
-    return $this->accessConditionCollection;
+    return $this->conditionCollection;
   }
 
   /**

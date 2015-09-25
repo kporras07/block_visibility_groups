@@ -147,7 +147,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
           $conditions_element['#open'] = FALSE;
         }
 
-        $form['block_visibility_group']['access_section_section'] = $conditions_element;
+        $form['block_visibility_group']['conditions_section'] = $conditions_element;
 
 
       }
@@ -387,7 +387,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
    */
   protected function createHelp(BlockVisibilityGroup $group) {
     $help = '<strong>' . $this->t('Currently viewing') . ': <em>' . $group->label() . '</em></strong>';
-    if ($group->getAccessLogic() == 'and') {
+    if ($group->getLogic() == 'and') {
       $help .= '<p>' . $this->t('All conditions must pass.') . '</p>';
     }
     else {

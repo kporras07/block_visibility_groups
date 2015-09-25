@@ -57,13 +57,13 @@ class BlockVisibilityGroupController extends ControllerBase {
   }
 
   /**
-   * Presents a list of access conditions to add to the block_visibility_group entity.
+   * Presents a list of conditions to add to the block_visibility_group entity.
    *
    * @param \Drupal\block_visibility_groups\Entity\BlockVisibilityGroup $block_visibility_group
    *   The block_visibility_group entity.
    *
    * @return array
-   *   The access condition selection page.
+   *   The condition selection page.
    */
   public function selectCondition(BlockVisibilityGroup $block_visibility_group, $redirect) {
     $build = [
@@ -73,14 +73,13 @@ class BlockVisibilityGroupController extends ControllerBase {
     $available_plugins = $this->conditionManager->getDefinitions();
     // @todo Should nesting Conditions be allowed
     unset($available_plugins['condition_group']);
-    foreach ($available_plugins as $access_id => $access_condition) {
-      $build['#links'][$access_id] = [
-        'title' => $access_condition['label'], //$access_condition['label'],
-        'url' => Url::fromRoute('block_visibility_groups.access_condition_add', [
+    foreach ($available_plugins as $condition_id => $condition) {
+      $build['#links'][$condition_id] = [
+        'title' => $condition['label'],
+        'url' => Url::fromRoute('block_visibility_groups.condition_add', [
           'block_visibility_group' => $block_visibility_group->id(),
-          'condition_id' => $access_id,
+          'condition_id' => $condition_id,
           'redirect' => $redirect,
-
         ]),
         'attributes' => [
           'class' => ['use-ajax'],
