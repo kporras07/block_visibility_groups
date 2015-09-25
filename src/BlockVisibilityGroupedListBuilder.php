@@ -340,7 +340,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
             $condition_config = $conditions->get('condition_group')
               ->getConfiguration();
             if (isset($labels[$condition_config['block_visibility_group']])) {
-              $visibility_group = $labels[$condition_config['block_visibility_group']];
+              $visibility_group = '<strong>' .  $labels[$condition_config['block_visibility_group']] . '</strong>';
             }
 
           }
