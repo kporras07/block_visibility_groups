@@ -1,0 +1,83 @@
+<?php
+/**
+ * @file
+ * Contains hooks.
+ */
+
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\block_visibility_groups\Plugin\Condition\ConditionGroup;
+use Drupal\Core\Executable\ExecutableManagerInterface;
+use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_page_top().
+ *
+ * Output links at the of the page to edit group and manage blocks for group.
+ */
+function block_visibility_groups_devel_page_top(&$page_top) {
+  if (!\Drupal::currentUser()->hasPermission('administer blocks')) {
+    return;
+  }
+  $edit_links = [
+    '#type' => 'details',
+    '#title' => t('Active Block Visibility Groups'),
+  ];
+  /** @var EntityStorageInterface $storage */
+  $storage = \Drupal::getContainer()->get('entity.manager')->getStorage('block_visibility_group');
+
+  /** @var \Drupal\Core\Executable\ExecutableManagerInterface $manager; */
+  $condition_manager = \Drupal::getContainer()->get('plugin.manager.condition');
+
+  $has_active_group = FALSE;
+  /** @var BlockVisibilityGroup $group */
+  foreach ($storage->loadMultiple() as $id => $group) {
+    $condition = $condition_manager->createInstance('condition_group', ['block_visibility_group' => $id]);
+    /** @var ConditionGroup $condition;*/
+    if ($condition->evaluate()) {
+      $has_active_group = TRUE;
+
+      $edit_links[] = [
+          '#type' => 'container',
+
+          'edit' => [
+            '#type' => 'link',
+            '#title' => $group->label(),
+            '#url' => $group->urlInfo('edit-form'),
+            '#suffix' => ' - ',
+          ],
+        'manage' => [
+          '#type' => 'link',
+          '#title' => t('Manage Blocks'),
+          '#url' => Url::fromRoute('block.admin_display_theme', [
+            'theme' => \Drupal::theme()->getActiveTheme()->getName(),
+          ],
+            [
+              'query' => ['block_visibility_group' => $group->id()]
+            ]
+          ),
+        ]
+
+      ];
+    }
+  }
+
+  if (!$has_active_group) {
+    $edit_links['manage_global'] = [
+      '#type' => 'link',
+      '#title' => t('Manage Global Blocks'),
+      '#url' => Url::fromRoute('block.admin_display_theme', [
+        'theme' => \Drupal::theme()->getActiveTheme()->getName(),
+      ]
+      )
+    ];
+    /**
+     * @todo Create links to create new Block Visibility Groups when none active
+     *  1. Add Group based on path. Replace route parameter with *
+     *       or make condition plugin for current route
+     *  2. If entity access enabled Group based on current entity type or bundle!
+    */
+
+  }
+  $page_top['bvg_devel'] = $edit_links;
+}
