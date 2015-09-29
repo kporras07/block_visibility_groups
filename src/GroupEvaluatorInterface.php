@@ -6,6 +6,7 @@
 
 namespace Drupal\block_visibility_groups;
 
+use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 
 /**
  * Interface GroupEvaluatorInterface.
