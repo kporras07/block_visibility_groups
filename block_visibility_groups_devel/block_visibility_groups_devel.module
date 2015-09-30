@@ -71,6 +71,16 @@ function block_visibility_groups_devel_page_top(&$page_top) {
       ]
       )
     ];
+    /** @var \Drupal\block_visibility_groups_devel\GroupCreatorManager $plugin_manager */
+    $plugin_manager = \Drupal::getContainer()->get('plugin.manager.block_visibility_groups_devel.group_creator');
+    $defs = $plugin_manager->getDefinitions();
+    foreach ($defs as $id => $info) {
+      /** @var \Drupal\block_visibility_groups_devel\Plugin\BlockVisibilityGroupCreatorInterface $creator */
+      $creator = $plugin_manager->createInstance($id);
+      $edit_links['create'][$id] = $creator->createConditionsForms();
+    }
+
+
     /**
      * @todo Create links to create new Block Visibility Groups when none active
      *  1. Add Group based on path. Replace route parameter with *

@@ -1,0 +1,5 @@
+services:
+  plugin.manager.block_visibility_groups_devel.group_creator:
+    class: Drupal\block_visibility_groups_devel\GroupCreatorManager
+    parent: default_plugin_manager
+
