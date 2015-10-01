@@ -160,5 +160,13 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function save() {
+    // @todo Clear caches here for blocks or themes that use this group.
+    return parent::save();
+  }
+
 
 }
