@@ -76,7 +76,7 @@ function block_visibility_groups_devel_page_top(&$page_top) {
     $defs = $plugin_manager->getDefinitions();
     foreach ($defs as $id => $info) {
       /** @var \Drupal\block_visibility_groups_devel\Plugin\BlockVisibilityGroupCreatorInterface $creator */
-      $creator = $plugin_manager->createInstance($id);
+        $creator = $plugin_manager->createInstance($id);
       $edit_links['create'][$id] = $creator->createConditionsForms();
     }
 
@@ -87,6 +87,8 @@ function block_visibility_groups_devel_page_top(&$page_top) {
      *       or make condition plugin for current route
      *  2. If entity access enabled Group based on current entity type or bundle!
     */
+    //\\Drupal::formBuilder()->buildForm('fd');
+    $edit_links['new_group'] = Drupal::formBuilder()->getForm('\Drupal\block_visibility_groups_devel\Form\ConditionCreatorForm');
 
   }
   $page_top['bvg_devel'] = $edit_links;
