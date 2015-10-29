@@ -9,6 +9,7 @@ namespace Drupal\block_visibility_groups\Plugin\Condition;
 
 
 use Drupal\block_visibility_groups\GroupEvaluator;
+use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -29,6 +30,9 @@ use Symfony\Component\HttpFoundation\Request;
  * )
  */
 class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPluginInterface{
+
+  use DependencyTrait;
+
   /**
    * The condition plugin manager.
    *
@@ -160,10 +164,9 @@ class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPlug
     $dependencies = parent::calculateDependencies();
     if (!empty($this->configuration['block_visibility_group'])) {
       $group = $this->entityStorage->load($this->configuration['block_visibility_group']);
-      $id = $group->getConfigTarget();
-      $dependencies['config'][] = 'block_visibility_group.block_visibility_group.' . $id;
+      $this->addDependency('config', $group->getConfigDependencyName());
     }
-    return $dependencies;
+    return $this->dependencies;
   }
 
 }
