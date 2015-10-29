@@ -59,8 +59,13 @@ class GroupEvaluator implements GroupEvaluatorInterface {
     if (!isset($this->group_evaluations[$group_id])) {
       /** @var ConditionPluginCollection $conditions */
       $conditions = $block_visibility_group->getConditions();
-      if ($this->applyContexts($conditions)) {
-        $this->group_evaluations[$group_id] = $this->resolveConditions($conditions, $block_visibility_group->getLogic());
+      if (empty($conditions)) {
+        // If no conditions then always true.
+        return TRUE;
+      }
+      $logic = $block_visibility_group->getLogic();
+      if ($this->applyContexts($conditions, $logic)) {
+        $this->group_evaluations[$group_id] = $this->resolveConditions($conditions, $logic);
       }
       else {
         $this->group_evaluations[$group_id] = FALSE;
@@ -69,17 +74,31 @@ class GroupEvaluator implements GroupEvaluatorInterface {
     return $this->group_evaluations[$group_id];
   }
 
-  protected function applyContexts(ConditionPluginCollection &$conditions) {
-    foreach ($conditions as $condition) {
+  protected function applyContexts(ConditionPluginCollection &$conditions, $logic) {
+    $have_1_testable_condition = FALSE;
+    foreach ($conditions as $id => $condition) {
       if ($condition instanceof ContextAwarePluginInterface) {
         try {
           $contexts = $this->contextRepository->getRuntimeContexts(array_values($condition->getContextMapping()));
           $this->contextHandler->applyContextMapping($condition, $contexts);
+          $have_1_testable_condition = TRUE;
         }
         catch (ContextException $e) {
-          return FALSE;
+          if ($logic == 'all') {
+            // Logic is all and found condition with contextException.
+            return FALSE;
+          }
+          $conditions->removeInstanceId($id);
+
         }
+
       }
+      else {
+        $have_1_testable_condition = TRUE;
+      }
+    }
+    if ($logic == 'or' && !$have_1_testable_condition) {
+      return FALSE;
     }
     return TRUE;
   }
