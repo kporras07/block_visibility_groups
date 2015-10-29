@@ -93,3 +93,29 @@ function block_visibility_groups_devel_page_top(&$page_top) {
   }
   $page_top['bvg_devel'] = $edit_links;
 }
+
+
+/**
+ * Implements hook_toolbar().
+ */
+function block_visibility_groups_devel_toolbar() {
+  $route = \Drupal::routeMatch();
+  $items['block_visibility_groups_devel'] = array(
+    '#type' => 'toolbar_item',
+    'tab' => array(
+      '#type' => 'link',
+      '#title' => t('Block Visibility Groups'),
+      '#url' => \Drupal\Core\Url::fromRoute('block_visibility_groups_devel.group_create',
+         [
+           'route' => $route->getRouteName(),
+           'parameters' => '',
+         ]
+        ),
+      '#attributes' => array(
+        'title' => t('Create new visibility Group'),
+        'class' => array('toolbar-icon'),
+      ),
+    )
+  );
+  return $items;
+}
