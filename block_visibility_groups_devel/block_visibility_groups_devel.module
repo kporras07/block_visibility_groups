@@ -6,9 +6,9 @@
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\block_visibility_groups\Plugin\Condition\ConditionGroup;
-use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Core\Url;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Implements hook_page_top().
@@ -100,6 +100,9 @@ function block_visibility_groups_devel_page_top(&$page_top) {
  */
 function block_visibility_groups_devel_toolbar() {
   $route = \Drupal::routeMatch();
+
+  $json_params = Json::encode($route->getRawParameters()->all());
+  $encoded_parameters = urlencode($json_params);
   $items['block_visibility_groups_devel'] = array(
     '#type' => 'toolbar_item',
     'tab' => array(
@@ -107,13 +110,17 @@ function block_visibility_groups_devel_toolbar() {
       '#title' => t('Block Visibility Groups'),
       '#url' => \Drupal\Core\Url::fromRoute('block_visibility_groups_devel.group_create',
          [
-           'route' => $route->getRouteName(),
-           'parameters' => '',
+           'route_name' => $route->getRouteName(),
+           'parameters' => $encoded_parameters,
          ]
         ),
       '#attributes' => array(
-        'title' => t('Create new visibility Group'),
-        'class' => array('toolbar-icon'),
+        'title' => t('Create new visibility Groupx'),
+        'data-dialog-type' => 'modal',
+        'data-dialog-options' => \Drupal\Component\Serialization\Json::encode([
+          'width' => 700,
+        ]),
+        'class' => array('toolbar-icon', 'use-ajax'),
       ),
     )
   );

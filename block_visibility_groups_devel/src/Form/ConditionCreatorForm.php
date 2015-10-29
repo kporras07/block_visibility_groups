@@ -10,7 +10,9 @@ namespace Drupal\block_visibility_groups_devel\Form;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Route;
 
 class ConditionCreatorForm extends FormBase{
 
@@ -34,8 +36,11 @@ class ConditionCreatorForm extends FormBase{
   }
 
 
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['conditions'] = $this->conditionOptions();
+  public function buildForm(array $form, FormStateInterface $form_state, $route_name = NULL, $parameters = NULL) {
+    if (empty($route_name)) {
+      // @todo Throw error
+    }
+    $form['conditions'] = $this->conditionOptions($route_name);
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Create new Group'),
@@ -43,7 +48,7 @@ class ConditionCreatorForm extends FormBase{
     return $form;
   }
 
-  protected function conditionOptions() {
+  protected function conditionOptions($route_name) {
     $elements = [
       '#tree' => TRUE,
     ];
@@ -52,7 +57,7 @@ class ConditionCreatorForm extends FormBase{
     foreach ($defs as $id => $info) {
       $options = [];
       /** @var \Drupal\block_visibility_groups_devel\Plugin\BlockVisibilityGroupCreatorInterface $creator */
-      $creator = $this->manager->createInstance($id);
+      $creator = $this->manager->createInstance($id,['route_name' => $route_name]);
       $condition_elements = $creator->getNewConditionsElements();
       if ($condition_elements) {
         $elements[$id] = $condition_elements;

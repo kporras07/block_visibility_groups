@@ -8,9 +8,10 @@
 namespace Drupal\block_visibility_groups_devel\Plugin\BlockVisibilityGroupCreator;
 
 use Drupal\block_visibility_groups_devel\Plugin\BlockVisibilityGroupCreatorInterface;
+use Drupal\block_visibility_groups_devel\Plugin\ConditionCreatorBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\Core\Routing\CurrentRouteMatch;
+
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -24,31 +25,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = "Route Creator"
  * )
  */
-class RouteConditionCreator extends PluginBase implements  BlockVisibilityGroupCreatorInterface, ContainerFactoryPluginInterface{
+class RouteConditionCreator extends ConditionCreatorBase implements  ContainerFactoryPluginInterface{
 
-  /** @var \Drupal\Core\Routing\CurrentRouteMatch */
-  protected $currentRoute;
-  /**
-   * RouteConditionCreator constructor.
-   */
-  public function __construct(RouteMatchInterface $current_route_match) {
-    $this->currentRoute = $current_route_match;
-  }
 
-  /**
-   * Creates an instance of the plugin.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The container to pull out services used in the plugin.
-   *
-   * @return static
-   *   Returns an instance of this plugin.
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $container->get('current_route_match')
-    );
-  }
   public function createConditionsForms() {
     $path = $this->getPathPattern();
 
@@ -65,9 +44,9 @@ class RouteConditionCreator extends PluginBase implements  BlockVisibilityGroupC
    * @return mixed|string
    */
   protected function getPathPattern() {
-    $route = $this->currentRoute->getRouteObject();
+    $route = $this->route->getRouteObject();
     $path = $route->getPath();
-    $parameters = $this->currentRoute->getParameters();
+    $parameters = $this->route->getParameters();
     foreach ($parameters as $pkey => $pvalue) {
       $path = str_replace('{' . $pkey . '}', '*', $path);
     }

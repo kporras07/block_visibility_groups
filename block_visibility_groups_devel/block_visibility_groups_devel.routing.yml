@@ -1,5 +1,5 @@
 block_visibility_groups_devel.group_create:
-  path: 'admin/structure/block/block-visibility-group/{route}/{parameters}'
+  path: 'admin/structure/block/block-visibility-group/{route_name}/{parameters}'
   defaults:
     _form: '\Drupal\block_visibility_groups_devel\Form\ConditionCreatorForm'
     _title: 'Add New Visibility Group'
