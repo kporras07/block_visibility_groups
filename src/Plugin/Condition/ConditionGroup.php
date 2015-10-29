@@ -187,4 +187,18 @@ class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPlug
     $this->request = $request;
   }
 
+  /**
+   * {inheritdoc}
+   */
+  public function calculateDependencies() {
+    // Get dependencies from parent.
+    $dependencies = parent::calculateDependencies();
+    if (!empty($this->configuration['block_visibility_group'])) {
+      $group = $this->entityStorage->load($this->configuration['block_visibility_group']);
+      $id = $group->getConfigTarget();
+      $dependencies['config'][] = 'block_visibility_group.block_visibility_group.' . $id;
+    }
+    return $dependencies;
+  }
+
 }
