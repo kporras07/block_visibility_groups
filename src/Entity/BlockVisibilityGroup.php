@@ -7,6 +7,7 @@
 
 namespace Drupal\block_visibility_groups\Entity;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\block_visibility_groups\BlockVisibilityGroupInterface;
@@ -160,12 +161,9 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function save() {
-    // @todo Clear caches here for blocks or themes that use this group.
-    return parent::save();
+  public function getCacheTags() {
+    $tags = parent::getCacheTags();
+    return Cache::mergeTags($tags, ['block_visibility_group:' . $this->id]);
   }
 
 

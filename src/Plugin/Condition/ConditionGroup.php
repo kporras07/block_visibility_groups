@@ -9,6 +9,7 @@ namespace Drupal\block_visibility_groups\Plugin\Condition;
 
 
 use Drupal\block_visibility_groups\GroupEvaluator;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Condition\ConditionPluginBase;
@@ -167,6 +168,18 @@ class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPlug
       $this->addDependency('config', $group->getConfigDependencyName());
     }
     return $this->dependencies;
+  }
+
+  /**
+   * {inheritdoc}
+   */
+  public function getCacheTags() {
+    $tags = parent::getCacheTags();
+    if (!empty($this->configuration['block_visibility_group'])) {
+      $group = $this->entityStorage->load($this->configuration['block_visibility_group']);
+      $tags = Cache::mergeTags($tags, $group->getCacheTags());
+    }
+    return $tags;
   }
 
 }
