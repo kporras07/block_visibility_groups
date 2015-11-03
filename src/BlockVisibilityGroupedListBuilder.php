@@ -235,13 +235,20 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
               'block_visibility_group' => $block_visibility_group,
             ],
             [
-              'query' => [
-                'region' => $query['region'],
-              ],
+              'query' => $query,
             ]);
           $row_info['title']['#url'] = $url;
           //$query['block_visibility_group'] = $this->getBlockVisibilityGroup();
           //$url->setOption('query', $query);
+        }
+        if (isset($row_info['operations']['#links']) && $row_info['operations']['#links']) {
+          foreach ($row_info['operations']['#links'] as $op => &$op_info) {
+            $url = $op_info['url'];
+            $query = $url->getOption('query');
+            $query['block_visibility_group'] = $block_visibility_group;
+            $url->setOption('query', $query);
+          }
+
         }
 
       }
