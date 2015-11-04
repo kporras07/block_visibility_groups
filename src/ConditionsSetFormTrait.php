@@ -15,7 +15,6 @@ use Drupal\Core\Url;
 
 trait ConditionsSetFormTrait {
 
-  use StringTranslationTrait;
   /**
    * @param array $form
    * @param $block_visibility_group
