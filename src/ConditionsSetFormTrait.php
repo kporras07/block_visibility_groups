@@ -1,8 +1,7 @@
 <?php
 /**
- * Author: Ted Bowman
- * Date: 9/23/15
- * Time: 6:14 PM
+ * @file
+ * Contains \Drupal\block_visibility_groups\ConditionsSetFormTrait;
  */
 
 namespace Drupal\block_visibility_groups;
