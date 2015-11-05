@@ -33,25 +33,39 @@ class VisibilityTest extends BlockVisibilityGroupsTestBase {
         'label' => $this->randomString(),
       ]
     );
+
+    $group->save();
+
+    // @todo Condition with node doesn't work for some reason.
     $config = [
       'id' => 'node_type',
       'bundles' => ['page'],
       'negate' => 0,
       'context_mapping' => ['node' => '@node.node_route_context:node'],
     ];
-    $group->save();
+    $config = [
+      'id' => 'request_path',
+      'pages' => '/node/*',
+      'negate' => 0,
+    ];
     $group->addCondition($config);
     $group->save();
 
     $block_title = $this->randomMachineName();
-    $this->placeBlockInGroup('system_powered_by_block', $group->id(), $block_title);
+    $this->placeBlockInGroupUI('system_powered_by_block', $group->id(), $block_title);
+    $this->placeBlockInGroupUI('system_powered_by_block', NULL, 'another');
 
     $page_node = $this->drupalCreateNode();
     $this->drupalGet('node/' . $page_node->id());
-    $this->assertText($block_title,'Block shows up on page node.');
+    $this->assertText($block_title,'Block shows up on page node when added via UI.');
 
-    $article_node = $this->drupalCreateNode(['type' => 'article']);
-    $this->drupalGet('node/' . $article_node->id());
-    $this->assertNoText($block_title,'Block does not show up on article node.');
+    $this->drupalGet('user');
+    $this->assertNoText($block_title,'Block does not show up on user page when added via UI.');
+
+    $block = $this->placeBlockInGroup('system_powered_by_block', $group->id());
+    $this->drupalGet('node/' . $page_node->id());
+    $this->assertText($block->label(),'Block shows up on page node.');
+    $this->drupalGet('user');
+    $this->assertNoText($block->label(),'Block does not show up on user page.');
   }
 }

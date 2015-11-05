@@ -46,24 +46,14 @@ abstract class BlockVisibilityGroupsTestBase extends WebTestBase {
    *
    * @return \Drupal\block\Entity\Block
    */
-  protected function placeBlockInGroupProg($plugin_id, $group_id, $settings = []) {
+  protected function placeBlockInGroup($plugin_id, $group_id, $settings = []) {
     $settings['label_display'] = 'visible';
     $settings['label'] = $this->randomMachineName();
+    $settings['visibility']['condition_group']['block_visibility_group'] = $group_id;
     $block = $this->drupalPlaceBlock($plugin_id, $settings);
-    /*
-    $condition_group_settings = [
-      'plugin_id' => 'condition_group',
-      'negate' => FALSE,
-      'block_visibility_group' => $group_id,
-      'context_mapping' => [],
-    ];
-    $visibility = $block->getVisibility();
-    $visibility['condition_group']['block_visibility_group'] = $group_id;
-    */
-    $block->setVisibilityConfig('condition_group',['block_visibility_group' => $group_id]);
     return $block;
   }
-  protected function placeBlockInGroup($plugin_id, $group_id, $title) {
+  protected function placeBlockInGroupUI($plugin_id, $group_id, $title) {
 
     // Enable a standard block.
     $default_theme = $this->config('system.theme')->get('default');
@@ -73,11 +63,18 @@ abstract class BlockVisibilityGroupsTestBase extends WebTestBase {
       'settings[label]' => $title,
     );
     $block_id = $edit['id'];
-    $edit['visibility[condition_group][block_visibility_group]'] = $group_id;
+    if ($group_id) {
+      $edit['visibility[condition_group][block_visibility_group]'] = $group_id;
+    }
+
 
     $this->drupalGet('admin/structure/block/add/' . $plugin_id . '/' . $default_theme);
 
     $this->drupalPostForm(NULL, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
+
+    // Just for Debug message.
+    $this->drupalGet('admin/structure/block/manage/' . $edit['id']);
+    $this->drupalGet('admin/structure/block/block-visibility-group/' . $group_id);
   }
 }
