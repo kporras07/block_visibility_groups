@@ -27,16 +27,6 @@ abstract class BlockVisibilityGroupsTestBase extends WebTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'administer blocks',
     ]));
-
-    // Create Basic page and Article node types.
-    if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array(
-        'type' => 'page',
-        'name' => 'Basic page',
-        'display_submitted' => FALSE,
-      ));
-      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
-    }
   }
 
   /**

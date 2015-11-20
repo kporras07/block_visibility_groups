@@ -8,9 +8,7 @@
 namespace Drupal\block_visibility_groups\Tests;
 
 
-use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
-use Drupal\node\Plugin\Condition\NodeType;
 
 /**
  * Tests the block_visibility_groups Visibility Settings.
@@ -19,6 +17,23 @@ use Drupal\node\Plugin\Condition\NodeType;
  */
 class VisibilityTest extends BlockVisibilityGroupsTestBase {
 
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // Create Basic page and Article node types.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array(
+        'type' => 'page',
+        'name' => 'Basic page',
+        'display_submitted' => FALSE,
+      ));
+      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    }
+  }
   /**
    * Modules to enable.
    *
@@ -27,15 +42,6 @@ class VisibilityTest extends BlockVisibilityGroupsTestBase {
   public static $modules = ['block', 'block_visibility_groups', 'node'];
 
   public function testSingleConditions() {
-    $group = BlockVisibilityGroup::create(
-      [
-        'id' => $this->randomMachineName(),
-        'label' => $this->randomString(),
-      ]
-    );
-
-    $group->save();
-
     // @todo Condition with node doesn't work for some reason.
     $config = [
       'id' => 'node_type',
@@ -43,17 +49,15 @@ class VisibilityTest extends BlockVisibilityGroupsTestBase {
       'negate' => 0,
       'context_mapping' => ['node' => '@node.node_route_context:node'],
     ];
-    $config = [
+    $configs['request'] = [
       'id' => 'request_path',
       'pages' => '/node/*',
       'negate' => 0,
     ];
-    $group->addCondition($config);
-    $group->save();
+    $group = $this->createGroup($configs);
 
     $block_title = $this->randomMachineName();
     $this->placeBlockInGroupUI('system_powered_by_block', $group->id(), $block_title);
-    $this->placeBlockInGroupUI('system_powered_by_block', NULL, 'another');
 
     $page_node = $this->drupalCreateNode();
     $this->drupalGet('node/' . $page_node->id());
@@ -67,5 +71,26 @@ class VisibilityTest extends BlockVisibilityGroupsTestBase {
     $this->assertText($block->label(),'Block shows up on page node.');
     $this->drupalGet('user');
     $this->assertNoText($block->label(),'Block does not show up on user page.');
+  }
+
+  /**
+   * @param $config
+   *
+   * @return static
+   */
+  private function createGroup($configs) {
+    $group = BlockVisibilityGroup::create(
+      [
+        'id' => $this->randomMachineName(),
+        'label' => $this->randomString(),
+      ]
+    );
+
+    $group->save();
+    foreach ($configs as $config) {
+      $group->addCondition($config);
+    }
+    $group->save();
+    return $group;
   }
 }

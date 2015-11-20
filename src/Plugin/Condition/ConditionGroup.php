@@ -72,8 +72,15 @@ class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPlug
       return TRUE;
     }
     /** @var BlockVisibilityGroup $block_visibility_group */
-    $block_visibility_group = $this->entityStorage->load($block_visibility_group_id);
-    return $this->groupEvaluator->evaluateGroup($block_visibility_group);
+    if ($block_visibility_group = $this->entityStorage->load($block_visibility_group_id)) {
+      return $this->groupEvaluator->evaluateGroup($block_visibility_group);
+    }
+    else {
+      // Group doesn't exist.
+      // @todo How to handle?
+      return FALSE;
+    }
+
   }
 
   /**
@@ -176,8 +183,9 @@ class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPlug
   public function getCacheTags() {
     $tags = parent::getCacheTags();
     if (!empty($this->configuration['block_visibility_group'])) {
-      $group = $this->entityStorage->load($this->configuration['block_visibility_group']);
-      $tags = Cache::mergeTags($tags, $group->getCacheTags());
+      if ($group = $this->entityStorage->load($this->configuration['block_visibility_group'])) {
+        $tags = Cache::mergeTags($tags, $group->getCacheTags());
+      }
     }
     return $tags;
   }
