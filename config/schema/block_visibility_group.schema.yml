@@ -22,3 +22,9 @@ block_visibility_groups.block_visibility_group.*:
     allow_other_conditions:
       type: boolean
       label: 'Allow Other Conditions'
+
+condition.plugin.condition_group:
+  type: condition.plugin
+  mapping:
+    block_visibility_group:
+      type: string
