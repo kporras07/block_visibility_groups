@@ -84,7 +84,7 @@ class GroupEvaluator implements GroupEvaluatorInterface {
           $have_1_testable_condition = TRUE;
         }
         catch (ContextException $e) {
-          if ($logic == 'all') {
+          if ($logic == 'and') {
             // Logic is all and found condition with contextException.
             return FALSE;
           }
