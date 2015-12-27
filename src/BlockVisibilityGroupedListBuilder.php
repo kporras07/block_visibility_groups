@@ -178,7 +178,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
   protected function getCurrentBlockVisibilityGroup() {
     $request_id = $this->request->query->get('block_visibility_group');
     if (!$request_id) {
-      $request_id = BlockVisibilityGroupedListBuilder::UNSET_GROUP;
+      $request_id = BlockVisibilityGroupedListBuilder::ALL_GROUP;
     }
     return $request_id;
   }
