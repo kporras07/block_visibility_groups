@@ -1,10 +1,7 @@
 <?php
-/**
- * @file
- * Contains Drupal\block_visibility_groups\GroupEvaluator.
- */
 
 namespace Drupal\block_visibility_groups;
+
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Condition\ConditionAccessResolverTrait;
@@ -37,9 +34,10 @@ class GroupEvaluator implements GroupEvaluatorInterface {
    */
   protected $contextRepository;
   /**
-   * @var array $group_evaluations;
+   * @var array $group_evaluations ;
    */
   protected $group_evaluations = [];
+
   /**
    * Constructor.
    */
@@ -82,8 +80,7 @@ class GroupEvaluator implements GroupEvaluatorInterface {
           $contexts = $this->contextRepository->getRuntimeContexts(array_values($condition->getContextMapping()));
           $this->contextHandler->applyContextMapping($condition, $contexts);
           $have_1_testable_condition = TRUE;
-        }
-        catch (ContextException $e) {
+        } catch (ContextException $e) {
           if ($logic == 'and') {
             // Logic is all and found condition with contextException.
             return FALSE;

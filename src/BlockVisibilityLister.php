@@ -1,15 +1,11 @@
 <?php
-/**
- * @file
- * Contains \Drupal\block_visibility_groups\BlockVisibilityLister;
- */
 
 namespace Drupal\block_visibility_groups;
 
 
 use Drupal\block\Entity\Block;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Condition\ConditionPluginCollection;
+use Drupal\Core\Entity\EntityStorageInterface;
 
 trait BlockVisibilityLister {
 

@@ -1,25 +1,18 @@
 <?php
-/**
- * Author: Ted Bowman
- * Date: 8/23/15
- * Time: 11:45 AM
- */
 
 namespace Drupal\block_visibility_groups\Plugin\Condition;
 
 
+use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\block_visibility_groups\GroupEvaluator;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Entity\DependencyTrait;
-use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
-use Drupal\Core\Condition\ConditionPluginCollection;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -30,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   label = @Translation("Condition Group"),
  * )
  */
-class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPluginInterface{
+class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
   use DependencyTrait;
 
@@ -68,7 +61,7 @@ class ConditionGroup extends ConditionPluginBase implements ContainerFactoryPlug
    */
   public function evaluate() {
     $block_visibility_group_id = $this->configuration['block_visibility_group'];
-    if (empty($block_visibility_group_id )) {
+    if (empty($block_visibility_group_id)) {
       return TRUE;
     }
     /** @var BlockVisibilityGroup $block_visibility_group */

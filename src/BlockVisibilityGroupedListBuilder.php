@@ -1,16 +1,11 @@
 <?php
-/**
- * @file
- * Contains \Drupal\block_visibility_groups\BlockVisibilityGroupedListBuilder;
- */
 
 namespace Drupal\block_visibility_groups;
 
 
 use Drupal\block\BlockListBuilder;
-use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\block\Entity\Block;
-use Drupal\Core\Condition\ConditionPluginCollection;
+use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBuilderInterface;
@@ -90,7 +85,11 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     $group_options = $this->getBlockVisibilityGroupOptions();
     $default_value = $this->getCurrentBlockVisibilityGroup();
     $current_block_visibility_group = NULL;
-    if (!in_array($default_value,[BlockVisibilityGroupedListBuilder::ALL_GROUP, BlockVisibilityGroupedListBuilder::UNSET_GROUP])) {
+    if (!in_array($default_value, [
+      BlockVisibilityGroupedListBuilder::ALL_GROUP,
+      BlockVisibilityGroupedListBuilder::UNSET_GROUP
+    ])
+    ) {
       $current_block_visibility_group = $default_value;
     }
     $options = [];
@@ -154,7 +153,6 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
 
     }
     $form['block_visibility_group']['select']['#description'] = $description;
-
 
 
     return $form;
@@ -259,7 +257,8 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
 
     // If viewing all blocks, add a column indicating the visibility group.
     if ($this->getBlockVisibilityGroup() == static::ALL_GROUP
-      || $block_visibility_group && $show_global_in_group) {
+      || $block_visibility_group && $show_global_in_group
+    ) {
       $this->addGroupColumn($form);
     }
 
@@ -279,7 +278,11 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
    */
   protected function getBlockVisibilityGroup($groups_only = FALSE) {
     $group = $this->request->query->get('block_visibility_group');
-    if ($groups_only && in_array($group, [$this::ALL_GROUP, $this::UNSET_GROUP])) {
+    if ($groups_only && in_array($group, [
+        $this::ALL_GROUP,
+        $this::UNSET_GROUP
+      ])
+    ) {
       return NULL;
     }
     return $group;
@@ -296,7 +299,8 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
     $current_block_visibility_group = $this->getCurrentBlockVisibilityGroup();
     $show_global_in_group = $this->getShowGlobalWithGroup();
     if (!empty($current_block_visibility_group)
-      && $current_block_visibility_group != $this::ALL_GROUP) {
+      && $current_block_visibility_group != $this::ALL_GROUP
+    ) {
       $entities = $this->storage->loadMultipleOverrideFree($entity_ids);
       /** @var Block $block */
       foreach ($entities as $block) {
@@ -308,7 +312,8 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
           }
         }
         elseif ($config_block_visibility_group != $current_block_visibility_group
-        && !(empty($config_block_visibility_group) && $show_global_in_group)) {
+          && !(empty($config_block_visibility_group) && $show_global_in_group)
+        ) {
           unset($entity_ids[$block->id()]);
         }
       }
@@ -350,7 +355,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
             $condition_config = $conditions->get('condition_group')
               ->getConfiguration();
             if (isset($labels[$condition_config['block_visibility_group']])) {
-              $visibility_group = '<strong>' .  $labels[$condition_config['block_visibility_group']] . '</strong>';
+              $visibility_group = '<strong>' . $labels[$condition_config['block_visibility_group']] . '</strong>';
             }
 
           }

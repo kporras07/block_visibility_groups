@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\block_visibility_groups\Controller\BlockVisibilityGroupListBuilder.
- */
-
 namespace Drupal\block_visibility_groups\Controller;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;

@@ -2,10 +2,10 @@
 
 namespace Drupal\block_visibility_groups\Entity;
 
+use Drupal\block_visibility_groups\BlockVisibilityGroupInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\block_visibility_groups\BlockVisibilityGroupInterface;
 
 /**
  * Defines the Block Visibility Group entity.
@@ -14,11 +14,15 @@ use Drupal\block_visibility_groups\BlockVisibilityGroupInterface;
  *   id = "block_visibility_group",
  *   label = @Translation("Block Visibility Group"),
  *   handlers = {
- *     "list_builder" = "Drupal\block_visibility_groups\Controller\BlockVisibilityGroupListBuilder",
+ *     "list_builder" =
+ *     "Drupal\block_visibility_groups\Controller\BlockVisibilityGroupListBuilder",
  *     "form" = {
- *       "add" = "Drupal\block_visibility_groups\Form\BlockVisibilityGroupForm",
- *       "edit" = "Drupal\block_visibility_groups\Form\BlockVisibilityGroupForm",
- *       "delete" = "Drupal\block_visibility_groups\Form\BlockVisibilityGroupDeleteForm"
+ *       "add" =
+ *       "Drupal\block_visibility_groups\Form\BlockVisibilityGroupForm",
+ *       "edit" =
+ *       "Drupal\block_visibility_groups\Form\BlockVisibilityGroupForm",
+ *       "delete" =
+ *       "Drupal\block_visibility_groups\Form\BlockVisibilityGroupDeleteForm"
  *     }
  *   },
  *   config_prefix = "block_visibility_group",
@@ -36,9 +40,12 @@ use Drupal\block_visibility_groups\BlockVisibilityGroupInterface;
  *     "allow_other_conditions",
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/block/block-visibility-group/{block_visibility_group}",
- *     "edit-form" = "/admin/structure/block/block-visibility-group/{block_visibility_group}/edit",
- *     "delete-form" = "/admin/structure/block/block-visibility-group/{block_visibility_group}/delete",
+ *     "canonical" =
+ *     "/admin/structure/block/block-visibility-group/{block_visibility_group}",
+ *     "edit-form" =
+ *     "/admin/structure/block/block-visibility-group/{block_visibility_group}/edit",
+ *     "delete-form" =
+ *     "/admin/structure/block/block-visibility-group/{block_visibility_group}/delete",
  *     "collection" =  "/admin/structure/block/block-visibility-group"
  *   }
  * )
@@ -160,7 +167,8 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
    */
   public function addCondition(array $configuration) {
     $configuration['uuid'] = $this->uuidGenerator()->generate();
-    $this->getConditions()->addInstanceId($configuration['uuid'], $configuration);
+    $this->getConditions()
+      ->addInstanceId($configuration['uuid'], $configuration);
     return $configuration['uuid'];
   }
 

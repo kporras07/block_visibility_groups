@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains   \Drupal\block_visibility_groups\Form\ConditionAddForm.
- */
-
 namespace Drupal\block_visibility_groups\Form;
 
 use Drupal\Core\Condition\ConditionManager;

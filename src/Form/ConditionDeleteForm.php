@@ -1,16 +1,11 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_visibility_groups\Form\ConditionDeleteForm.
- */
-
 namespace Drupal\block_visibility_groups\Form;
 
 use Drupal\block_visibility_groups\ConditionRedirectTrait;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a form for deleting an condition.

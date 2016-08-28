@@ -82,7 +82,8 @@ class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
   public function setBlocksGroup(array $blocks, $group_id = '') {
     /** @var \Drupal\block\Entity\Block $block */
     foreach ($blocks as $block) {
-      $config = $block->getVisibilityCondition('condition_group')->getConfiguration();
+      $config = $block->getVisibilityCondition('condition_group')
+        ->getConfiguration();
       $config['block_visibility_group'] = $group_id;
       $block->setVisibilityConfig('condition_group', $config);
       $block->save();

@@ -1,21 +1,15 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_visibility_group\Form\ConditionFormBase.
- */
-
 namespace Drupal\block_visibility_groups\Form;
 
 use Drupal\block_visibility_groups\BlockVisibilityGroupInterface;
 use Drupal\block_visibility_groups\ConditionRedirectTrait;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\FormBase;
-use Drupal\Core\Plugin\ContextAwarePluginInterface;
-use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
-use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
+use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -158,7 +152,6 @@ abstract class ConditionFormBase extends FormBase {
     $this->setConditionRedirect($form_state);
 
   }
-
 
 
 }

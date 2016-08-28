@@ -43,6 +43,7 @@ abstract class BlockVisibilityGroupsTestBase extends WebTestBase {
     $block = $this->drupalPlaceBlock($plugin_id, $settings);
     return $block;
   }
+
   protected function placeBlockInGroupUI($plugin_id, $group_id, $title) {
 
     // Enable a standard block.

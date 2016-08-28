@@ -7,8 +7,6 @@
 
 namespace Drupal\block_visibility_groups\Tests;
 
-use Drupal\block_visibility_groups\Tests\BlockVisibilityGroupsTestBase;
-
 /**
  * Tests the block_visibility_groups UI.
  *

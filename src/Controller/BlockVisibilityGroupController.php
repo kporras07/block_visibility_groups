@@ -4,10 +4,10 @@ namespace Drupal\block_visibility_groups\Controller;
 
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Condition\ConditionManager;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Condition\ConditionManager;
 
 /**
  * Class BlockVisibilityGroupController.
