@@ -166,7 +166,10 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $show_global = $form_state->getValue('block_visibility_group_show_global', 1);
     $this->state->set('block_visibility_group_show_global', $show_global);
-    parent::submitForm($form, $form_state);
+    // Prevent sending an empty value, which would unset all blocks.
+    if (!empty($form_state->getValue('blocks'))) {
+      parent::submitForm($form, $form_state);
+    }
   }
 
 
