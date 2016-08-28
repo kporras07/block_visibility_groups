@@ -1,13 +1,6 @@
 <?php
-/**
- * @file
- * Contains
- * \Drupal\block_visibility_groups_admin\Plugin\ConditionCreator\NodeTypeConditionCreator.
- */
-
 
 namespace Drupal\block_visibility_groups_admin\Plugin\ConditionCreator;
-
 
 use Drupal\block_visibility_groups_admin\Plugin\ConditionCreatorBase;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -16,7 +9,7 @@ use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * A condition creator to be used in creating user role condition
+ * A condition creator to be used in creating user role condition.
  *
  * @ConditionCreator(
  *   id = "node_type",
@@ -26,7 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class NodeTypeConditionCreator extends ConditionCreatorBase implements ContainerFactoryPluginInterface {
 
-  /** @var \Drupal\Core\Entity\EntityStorageInterface */
+  /**
+   * @var \Drupal\Core\Entity\EntityStorageInterface */
   protected $entityStorage;
 
   /**
@@ -43,7 +37,6 @@ class NodeTypeConditionCreator extends ConditionCreatorBase implements Container
 
   }
 
-
   /**
    * Creates an instance of the plugin.
    *
@@ -55,7 +48,7 @@ class NodeTypeConditionCreator extends ConditionCreatorBase implements Container
    * @param mixed $plugin_definition
    *
    * @return static Returns an instance of this plugin.
-   * Returns an instance of this plugin.
+   *   Returns an instance of this plugin.
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
@@ -66,10 +59,16 @@ class NodeTypeConditionCreator extends ConditionCreatorBase implements Container
     );
   }
 
+  /**
+   *
+   */
   public function getNewConditionLabel() {
     return $this->t('Content Types');
   }
 
+  /**
+   *
+   */
   public function createConditionElements() {
     $elements['condition_config'] = [
       '#tree' => TRUE,
@@ -90,17 +89,22 @@ class NodeTypeConditionCreator extends ConditionCreatorBase implements Container
       '#title' => $this->t('When the user has the following bundles'),
       '#options' => $options,
       '#default_value' => [$current_type],
-      //'#description' => $this->t('If you select no roles, the condition will evaluate to TRUE for all users.'),
+      // '#description' => $this->t('If you select no roles, the condition will evaluate to TRUE for all users.'),.
     );
     return $elements;
   }
 
+  /**
+   *
+   */
   public function itemSelected($condition_info) {
     $bundles = $condition_info['condition_config']['bundles'];
     return !empty(array_filter($bundles));
   }
 
-
+  /**
+   *
+   */
   public function createConditionConfig($plugin_info) {
     $config = parent::createConditionConfig($plugin_info);
     $config['bundles'] = array_filter($config['bundles']);
@@ -109,4 +113,5 @@ class NodeTypeConditionCreator extends ConditionCreatorBase implements Container
     ];
     return $config;
   }
+
 }

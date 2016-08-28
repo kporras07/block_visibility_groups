@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\block_visibility_groups_admin\Tests\GroupLister.
- */
-
 namespace Drupal\block_visibility_groups_admin\Tests;
 
 use Drupal\simpletest\WebTestBase;

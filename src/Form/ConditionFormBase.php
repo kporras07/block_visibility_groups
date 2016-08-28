@@ -51,12 +51,14 @@ abstract class ConditionFormBase extends FormBase {
     $this->contextRepository = $context_repository;
   }
 
+  /**
+   *
+   */
   public static function create(ContainerInterface $container) {
     return new static (
       $container->get('context.repository')
     );
   }
-
 
   /**
    * Prepares the condition used by this form.
@@ -152,6 +154,5 @@ abstract class ConditionFormBase extends FormBase {
     $this->setConditionRedirect($form_state);
 
   }
-
 
 }

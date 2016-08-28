@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\block_visibility_groups_admin\GroupInfoInterface.
- */
-
 namespace Drupal\block_visibility_groups_admin;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\block_visibility_groups_admin\Controller\GroupLister.
- */
-
 namespace Drupal\block_visibility_groups_admin\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -75,10 +70,10 @@ class GroupLister extends ControllerBase {
             'theme' => \Drupal::theme()->getActiveTheme()->getName(),
           ],
             [
-              'query' => ['block_visibility_group' => $group->id()]
+              'query' => ['block_visibility_group' => $group->id()],
             ]
           ),
-        ]
+        ],
 
       ];
     }

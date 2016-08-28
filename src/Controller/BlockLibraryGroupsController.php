@@ -2,7 +2,6 @@
 
 namespace Drupal\block_visibility_groups\Controller;
 
-
 use Drupal\block\Controller\BlockLibraryController;
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Symfony\Component\HttpFoundation\Request;

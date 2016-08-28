@@ -2,11 +2,12 @@
 
 namespace Drupal\block_visibility_groups;
 
-
 use Drupal\block\Entity\Block;
-use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Entity\EntityStorageInterface;
 
+/**
+ *
+ */
 trait BlockVisibilityLister {
 
   /**

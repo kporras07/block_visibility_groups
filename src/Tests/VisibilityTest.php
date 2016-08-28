@@ -1,12 +1,6 @@
 <?php
-/**
- * @file
- * Contains \Drupal\block_visibility_groups\Tests\VisibilityTest.
- */
-
 
 namespace Drupal\block_visibility_groups\Tests;
-
 
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 
@@ -16,7 +10,6 @@ use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
  * @group block_visibility_groups
  */
 class VisibilityTest extends BlockVisibilityGroupsTestBase {
-
 
   /**
    * {@inheritdoc}
@@ -33,7 +26,7 @@ class VisibilityTest extends BlockVisibilityGroupsTestBase {
       ));
       $this->drupalCreateContentType(array(
         'type' => 'article',
-        'name' => 'Article'
+        'name' => 'Article',
       ));
     }
   }
@@ -41,10 +34,13 @@ class VisibilityTest extends BlockVisibilityGroupsTestBase {
   /**
    * Modules to enable.
    *
-   * var array
+   * Var array.
    */
   public static $modules = ['block', 'block_visibility_groups', 'node'];
 
+  /**
+   *
+   */
   public function testSingleConditions() {
     // @todo Condition with node doesn't work for some reason.
     $config = [
@@ -97,4 +93,5 @@ class VisibilityTest extends BlockVisibilityGroupsTestBase {
     $group->save();
     return $group;
   }
+
 }

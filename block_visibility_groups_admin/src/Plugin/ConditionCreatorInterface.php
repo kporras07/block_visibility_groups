@@ -1,13 +1,10 @@
 <?php
-/**
- * @file
- * Contains
- * Drupal\block_visibility_groups_admin\Plugin\ConditionCreatorInterface.
- */
 
 namespace Drupal\block_visibility_groups_admin\Plugin;
 
-
+/**
+ *
+ */
 interface ConditionCreatorInterface {
 
   /**

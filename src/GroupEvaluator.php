@@ -10,7 +10,6 @@ use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 
-
 /**
  * Class ConditionEvaluator.
  *
@@ -72,6 +71,9 @@ class GroupEvaluator implements GroupEvaluatorInterface {
     return $this->group_evaluations[$group_id];
   }
 
+  /**
+   *
+   */
   protected function applyContexts(ConditionPluginCollection &$conditions, $logic) {
     $have_1_testable_condition = FALSE;
     foreach ($conditions as $id => $condition) {
@@ -80,7 +82,8 @@ class GroupEvaluator implements GroupEvaluatorInterface {
           $contexts = $this->contextRepository->getRuntimeContexts(array_values($condition->getContextMapping()));
           $this->contextHandler->applyContextMapping($condition, $contexts);
           $have_1_testable_condition = TRUE;
-        } catch (ContextException $e) {
+        }
+        catch (ContextException $e) {
           if ($logic == 'and') {
             // Logic is all and found condition with contextException.
             return FALSE;
@@ -99,4 +102,5 @@ class GroupEvaluator implements GroupEvaluatorInterface {
     }
     return TRUE;
   }
+
 }

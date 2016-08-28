@@ -10,6 +10,7 @@ use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
  * @package Drupal\block_visibility_groups
  */
 interface GroupEvaluatorInterface {
+
   /**
    * Evaluate Block Visibility Group.
    *

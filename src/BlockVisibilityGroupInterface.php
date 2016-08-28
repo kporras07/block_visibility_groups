@@ -10,5 +10,4 @@ use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
  */
 interface BlockVisibilityGroupInterface extends ConfigEntityInterface, EntityWithPluginCollectionInterface {
   // Add get/set methods for your configuration properties here.
-
 }

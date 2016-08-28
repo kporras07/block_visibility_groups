@@ -1,16 +1,11 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_visibility_groups_admin\Annotation\ConditionCreator.
- */
-
 namespace Drupal\block_visibility_groups_admin\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Class GroupCreator
+ * Class GroupCreator.
  *
  * @package Drupal\block_visibility_groups_admin\Annotation
  *
@@ -23,4 +18,5 @@ class ConditionCreator extends Plugin {
   public $label;
 
   public $condition_plugin;
+
 }

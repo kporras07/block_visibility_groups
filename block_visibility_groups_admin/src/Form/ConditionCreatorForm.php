@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_visibility_groups_admin\Form\ConditionCreatorForm.
- */
-
 namespace Drupal\block_visibility_groups_admin\Form;
 
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
@@ -14,11 +9,18 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ *
+ */
 class ConditionCreatorForm extends FormBase {
 
-  /** @var  \Drupal\Component\Plugin\PluginManagerInterface $manager ; */
+  /**
+   * @var  \Drupal\Component\Plugin\PluginManagerInterface $manager ; */
   protected $manager;
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.block_visibility_groups_admin.condition_creator')
@@ -34,11 +36,16 @@ class ConditionCreatorForm extends FormBase {
     $this->manager = $manager;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId() {
     return 'block_visibility_groups_admin_creator';
   }
 
-
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state, $route_name = NULL, $parameters = NULL) {
     $parameters = Json::decode($parameters);
     if (empty($route_name)) {
@@ -82,6 +89,9 @@ class ConditionCreatorForm extends FormBase {
     return $form;
   }
 
+  /**
+   *
+   */
   protected function conditionOptions($route_name, $parameters) {
     $elements = [
       '#tree' => TRUE,
@@ -106,6 +116,9 @@ class ConditionCreatorForm extends FormBase {
     return $elements;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $conditions = $this->getConditionValues($form_state);
     $route_name = $form_state->getValue('route_name');
@@ -128,7 +141,9 @@ class ConditionCreatorForm extends FormBase {
     $form_state->setErrorByName('conditions', $this->t('At least one condition must be selected'));
   }
 
-
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $id = $form_state->getValue('id');
     $label = $form_state->getValue('label');
@@ -154,6 +169,9 @@ class ConditionCreatorForm extends FormBase {
     );
   }
 
+  /**
+   *
+   */
   protected function getConditionValues(FormStateInterface $form_state) {
     return $form_state->cleanValues()->getValue('conditions');
   }
@@ -181,6 +199,5 @@ class ConditionCreatorForm extends FormBase {
     $group->save();
     return $group;
   }
-
 
 }

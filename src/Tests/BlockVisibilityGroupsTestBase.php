@@ -9,12 +9,15 @@ namespace Drupal\block_visibility_groups\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ *
+ */
 abstract class BlockVisibilityGroupsTestBase extends WebTestBase {
 
   /**
    * Modules to enable.
    *
-   * var array
+   * Var array.
    */
   public static $modules = ['block', 'block_visibility_groups'];
 
@@ -44,6 +47,9 @@ abstract class BlockVisibilityGroupsTestBase extends WebTestBase {
     return $block;
   }
 
+  /**
+   *
+   */
   protected function placeBlockInGroupUI($plugin_id, $group_id, $title) {
 
     // Enable a standard block.
@@ -59,7 +65,6 @@ abstract class BlockVisibilityGroupsTestBase extends WebTestBase {
       $edit['visibility[condition_group][block_visibility_group]'] = $group_id;
     }
 
-
     $this->drupalGet('admin/structure/block/add/' . $plugin_id . '/' . $default_theme);
 
     $this->drupalPostForm(NULL, $edit, t('Save block'));
@@ -69,4 +74,5 @@ abstract class BlockVisibilityGroupsTestBase extends WebTestBase {
     $this->drupalGet('admin/structure/block/manage/' . $edit['id']);
     $this->drupalGet('admin/structure/block/block-visibility-group/' . $group_id);
   }
+
 }

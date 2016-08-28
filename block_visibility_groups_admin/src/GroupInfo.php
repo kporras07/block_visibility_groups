@@ -1,13 +1,7 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\block_visibility_groups_admin\GroupInfo.
- */
-
 namespace Drupal\block_visibility_groups_admin;
 
-use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\block_visibility_groups\GroupEvaluator;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
@@ -49,7 +43,6 @@ class GroupInfo implements GroupInfoInterface {
     $this->group_storage = $entity_manager->getStorage('block_visibility_group');
     $this->condition_manager = $condition_manager;
   }
-
 
   /**
    * Get all active groups.

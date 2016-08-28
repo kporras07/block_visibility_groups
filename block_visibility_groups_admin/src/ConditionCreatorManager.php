@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\block_visibility_groups_admin\GroupCreatorManager.
- */
-
 namespace Drupal\block_visibility_groups_admin;
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -12,11 +7,11 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Routing\RouteMatch;
 
-
 /**
- * A Plugin
+ * A Plugin.
  */
 class ConditionCreatorManager extends DefaultPluginManager {
+
   /**
    * Constructor.
    *
@@ -49,6 +44,5 @@ class ConditionCreatorManager extends DefaultPluginManager {
     unset($configuration['route_name']);
     return parent::createInstance($plugin_id, $configuration);
   }
-
 
 }

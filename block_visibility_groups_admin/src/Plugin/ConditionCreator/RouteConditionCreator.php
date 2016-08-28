@@ -1,13 +1,8 @@
 <?php
-/**
- * @file
- * Contains \Drupal\block_visibility_groups_admin\Plugin\ConditionCreatorBase\RouteConditionCreator.
- */
 
 namespace Drupal\block_visibility_groups_admin\Plugin\ConditionCreator;
 
 use Drupal\block_visibility_groups_admin\Plugin\ConditionCreatorBase;
-
 
 /**
  * Defines the form in-place editor.
@@ -20,7 +15,9 @@ use Drupal\block_visibility_groups_admin\Plugin\ConditionCreatorBase;
  */
 class RouteConditionCreator extends ConditionCreatorBase {
 
-
+  /**
+   *
+   */
   public function getNewConditionLabel() {
     $current_path = $this->getPathPattern();
     return $this->t('Current path: @path', ['@path' => $current_path]);
@@ -39,6 +36,9 @@ class RouteConditionCreator extends ConditionCreatorBase {
     return $path;
   }
 
+  /**
+   *
+   */
   public function createConditionElements() {
     $elements = parent::createConditionElements();
 
@@ -46,7 +46,7 @@ class RouteConditionCreator extends ConditionCreatorBase {
       '#type' => 'value',
       '#value' => [
         'pages' => $this->getPathPattern(),
-      ]
+      ],
     ];
     return $elements;
   }

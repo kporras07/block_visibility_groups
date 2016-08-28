@@ -1,17 +1,11 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_visibility_groups_admin\Plugin\ConditionCreator\RolesConditionCreator.
- */
-
 namespace Drupal\block_visibility_groups_admin\Plugin\ConditionCreator;
 
 use Drupal\block_visibility_groups_admin\Plugin\ConditionCreatorBase;
 
-
 /**
- * A condition creator to be used in creating user role condition
+ * A condition creator to be used in creating user role condition.
  *
  * @ConditionCreator(
  *   id = "roles",
@@ -21,12 +15,16 @@ use Drupal\block_visibility_groups_admin\Plugin\ConditionCreatorBase;
  */
 class RolesConditionCreator extends ConditionCreatorBase {
 
-
+  /**
+   *
+   */
   public function getNewConditionLabel() {
     return $this->t('Roles');
   }
 
-
+  /**
+   *
+   */
   public function createConditionElements() {
     $elements['condition_config'] = [
       '#tree' => TRUE,
@@ -36,17 +34,22 @@ class RolesConditionCreator extends ConditionCreatorBase {
       '#type' => 'checkboxes',
       '#title' => $this->t('When the user has the following roles'),
       '#options' => array_map('\Drupal\Component\Utility\Html::escape', user_role_names()),
-      //'#description' => $this->t('If you select no roles, the condition will evaluate to TRUE for all users.'),
+      // '#description' => $this->t('If you select no roles, the condition will evaluate to TRUE for all users.'),.
     );
     return $elements;
   }
 
+  /**
+   *
+   */
   public function itemSelected($condition_info) {
     $roles = $condition_info['condition_config']['roles'];
     return !empty(array_filter($roles));
   }
 
-
+  /**
+   *
+   */
   public function createConditionConfig($plugin_info) {
     $config = parent::createConditionConfig($plugin_info);
     $config['roles'] = array_filter($config['roles']);
@@ -56,6 +59,5 @@ class RolesConditionCreator extends ConditionCreatorBase {
     ];
     return $config;
   }
-
 
 }

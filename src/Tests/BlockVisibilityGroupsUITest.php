@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\block_visibility_groups\Tests\BlockVisibilityGroupsUITest
- */
-
 namespace Drupal\block_visibility_groups\Tests;
 
 /**
