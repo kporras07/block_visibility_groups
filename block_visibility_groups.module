@@ -20,7 +20,8 @@ function block_visibility_groups_help($route_name, RouteMatchInterface $route_ma
     case 'help.page.block_visibility_groups':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('My Awesome Module') . '</p>';
+      $output .= '<p>' . t('Allows the site administrator to easily manage complex visibility settings that apply to any block placed in a visibility group.');
+      $output .= t('The visibility settings for all blocks in the group can be edited on one administration form.') . '</p>';
       return $output;
 
     default:
