@@ -51,6 +51,7 @@ abstract class BlockVisibilityGroupsTestBase extends WebTestBase {
       'id' => strtolower($this->randomMachineName(8)),
       'region' => 'sidebar_first',
       'settings[label]' => $title,
+      'settings[label_display]' => 1,
     );
     $block_id = $edit['id'];
     if ($group_id) {
