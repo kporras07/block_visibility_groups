@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\block_visibility_groups\Controller\BlockVisibilityGroupController.
- */
-
 namespace Drupal\block_visibility_groups\Controller;
 
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
@@ -27,6 +22,7 @@ class BlockVisibilityGroupController extends ControllerBase {
    * @var \Drupal\Core\Condition\ConditionManager
    */
   protected $conditionManager;
+
   /**
    * {@inheritdoc}
    */
@@ -51,8 +47,8 @@ class BlockVisibilityGroupController extends ControllerBase {
    */
   public function index($param_1, $param_2) {
     return [
-        '#type' => 'markup',
-        '#markup' => $this->t('Implement method: index with parameter(s): $param_1, $param_2')
+      '#type' => 'markup',
+      '#markup' => $this->t('Implement method: index with parameter(s): $param_1, $param_2'),
     ];
   }
 

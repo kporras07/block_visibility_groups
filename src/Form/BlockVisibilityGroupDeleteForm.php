@@ -1,17 +1,11 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\block_visibility_groups\Form\BlockVisibilityGroupDeleteForm.
- */
-
 namespace Drupal\block_visibility_groups\Form;
 
 use Drupal\block_visibility_groups\BlockVisibilityLister;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\block\Entity\Block;
 
 /**
  * Builds the form to delete Block Visibility Group entities.
@@ -21,6 +15,7 @@ class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
 
   const UNSET_BLOCKS = 'UNSET-BLOCKS';
   const DELETE_BLOCKS = 'DELETE-BLOCKS';
+
   /**
    * {@inheritdoc}
    */
@@ -47,15 +42,17 @@ class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Handle current blocks according to user's selection.
-    if ($blocks = $this->getBlocksForGroup($this->entity->id())) {
+    if ($blocks = $this->getBlocksForGroup()) {
       $blocks_op = $form_state->getValue('blocks_op');
       switch ($blocks_op) {
         case static::DELETE_BLOCKS:
           $this->blockStorage()->delete($blocks);
           break;
+
         case static::UNSET_BLOCKS:
           $this->setBlocksGroup($blocks);
           break;
+
         default:
           $this->setBlocksGroup($blocks, $blocks_op);
       }
@@ -66,7 +63,7 @@ class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
       $this->t('Deleted @type:  @label.',
         [
           '@type' => $this->entity->getEntityType()->getLabel(),
-          '@label' => $this->entity->label()
+          '@label' => $this->entity->label(),
         ]
       )
     );
@@ -78,10 +75,12 @@ class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
    * Set the visibility group for blocks.
    *
    * @param array $blocks
+   *   The blocks.
    * @param string $group_id
+   *   The group id.
    */
-  function setBlocksGroup(array $blocks, $group_id = '') {
-    /** @var Block $block */
+  public function setBlocksGroup(array $blocks, $group_id = '') {
+    /** @var \Drupal\block\Entity\Block $block */
     foreach ($blocks as $block) {
       $config = $block->getVisibilityCondition('condition_group')->getConfiguration();
       $config['block_visibility_group'] = $group_id;
@@ -93,9 +92,11 @@ class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
   /**
    * Get all blocks in the Visibility Group.
    *
-   * @param $group_id
+   * @return array
+   *   The blocks for the group.
    */
   protected function getBlocksForGroup() {
+    /** @var \Drupal\block\Entity\Block[] $all_blocks */
     $all_blocks = $this->blockStorage()->loadMultiple();
     $group_blocks = [];
     foreach ($all_blocks as $block) {
@@ -110,6 +111,7 @@ class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
    * Get Block Entity Storage.
    *
    * @return \Drupal\Core\Entity\EntityStorageInterface
+   *   Gets the block storage.
    */
   protected function blockStorage() {
     return $this->entityManager->getStorage('block');
@@ -123,7 +125,7 @@ class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
 
     if ($this->getBlocksForGroup()) {
       // If there are blocks in this group then
-      //  create a dropdown to let the user choose what to do with blocks.
+      // create a dropdown to let the user choose what to do with blocks.
       $options[static::UNSET_BLOCKS] = $this->t('Unset visibility group');
       $labels = $this->getBlockVisibilityLabels($this->entityManager->getStorage('block_visibility_group'));
       unset($labels[$this->entity->id()]);
@@ -131,7 +133,6 @@ class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
         $options[$type] = $this->t('Move blocks to group: <em>@label</em>', ['@label' => $label]);
       }
       $options[static::DELETE_BLOCKS] = $this->t('Delete all blocks');
-
 
       $form['blocks_op'] = [
         '#type' => 'select',
@@ -143,12 +144,11 @@ class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
     else {
       // No blocks in this group.
       $form['no_blocks'] = [
-        '#markup' => '<p>' .$this->t('There no blocks assigned to this group.') . '</p>',
+        '#markup' => '<p>' . $this->t('There no blocks assigned to this group.') . '</p>',
       ];
     }
 
     return $form;
   }
-
 
 }

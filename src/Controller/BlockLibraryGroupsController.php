@@ -1,9 +1,4 @@
 <?php
-/**
- * Author: Ted Bowman
- * Date: 8/24/15
- * Time: 9:17 AM
- */
 
 namespace Drupal\block_visibility_groups\Controller;
 
@@ -15,7 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Provides a list of block plugins to be added to the layout.
  */
-class BlockLibraryGroupsController extends BlockLibraryController{
+class BlockLibraryGroupsController extends BlockLibraryController {
+
+  /**
+   * {@inheritdoc}
+   */
   public function listBlocks(Request $request, $theme, BlockVisibilityGroup $block_visibility_group = NULL) {
     $list = parent::listBlocks($request, $theme);
     if ($block_visibility_group) {
@@ -23,8 +22,6 @@ class BlockLibraryGroupsController extends BlockLibraryController{
         $row['operations']['data']['#links']['add']['query']['block_visibility_group'] = $block_visibility_group->id();
       }
     }
-
-
     return $list;
   }
 

@@ -356,7 +356,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
           }
           $row = &$form[$block->id()];
           // Insert visibility group at correct position.
-          foreach (Element::Children($row) as $i => $child) {
+          foreach (Element::children($row) as $i => $child) {
             $row[$child]['#weight'] = $i;
           }
           $row['block_visibility_group'] = [

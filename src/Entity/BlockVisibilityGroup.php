@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\block_visibility_groups\Entity\BlockVisibilityGroup.
- */
-
 namespace Drupal\block_visibility_groups\Entity;
 
 use Drupal\Core\Cache\Cache;
@@ -55,21 +50,29 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
    * @var string
    */
   protected $id;
+
   /**
+   * Whether other conditions are allowed in the group.
    *
    * @var boolean
    */
   protected $allow_other_conditions;
 
   /**
-   * @return boolean
+   * Whether other conditions are allowed in the group.
+   *
+   * @return bool
+   *   True if conditions are allowed.
    */
   public function isAllowOtherConditions() {
     return $this->allow_other_conditions;
   }
 
   /**
-   * @param boolean $allow_other_conditions
+   * Sets whether other conditions should be allowed.
+   *
+   * @param bool $allow_other_conditions
+   *   Whether other conditions should be allowed.
    */
   public function setAllowOtherConditions($allow_other_conditions) {
     $this->allow_other_conditions = $allow_other_conditions;
@@ -83,6 +86,7 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
       'conditions' => $this->getConditions(),
     ];
   }
+
   /**
    * The Block Visibility Group label.
    *
@@ -105,14 +109,20 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
   protected $logic = 'and';
 
   /**
+   * Gets logic used to compute, either 'and' or 'or'.
+   *
    * @return string
+   *   Either 'and' or 'or'.
    */
   public function getLogic() {
     return $this->logic;
   }
 
   /**
+   * Sets logic used to compute, either 'and' or 'or'.
+   *
    * @param string $logic
+   *   Either 'and' or 'or'.
    */
   public function setLogic($logic) {
     $this->logic = $logic;
@@ -144,6 +154,7 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
   public function getCondition($condition_id) {
     return $this->getConditions()->get($condition_id);
   }
+
   /**
    * {@inheritdoc}
    */
@@ -161,10 +172,12 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getCacheTags() {
     $tags = parent::getCacheTags();
     return Cache::mergeTags($tags, ['block_visibility_group:' . $this->id]);
   }
-
 
 }
