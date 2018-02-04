@@ -86,16 +86,11 @@ function block_visibility_groups_block_form_submit($form, FormStateInterface $fo
         return;
       }
 
-      $visibility = $form_state->getValue('visibility');
-      // Loop through $visibility don't rely on keys. Check for 'id'.
-      foreach ($visibility as $condition_info) {
-        if ($condition_info['id'] == 'condition_group') {
-          if (!empty($condition_info['block_visibility_group'])) {
-            _block_visibility_groups_add_group_to_redirect($form_state, $condition_info['block_visibility_group']);
-          }
-          // Assume only one condition_group condition.
-          return;
-        }
+      /* @var \Drupal\block\BlockInterface $block */
+      $block = $form_state->getFormObject()->getEntity();
+      $condition_info = $block->getVisibilityCondition('condition_group')->getConfiguration();
+      if (!empty($condition_info['block_visibility_group'])) {
+        _block_visibility_groups_add_group_to_redirect($form_state, $condition_info['block_visibility_group']);
       }
     }
   }
