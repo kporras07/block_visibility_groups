@@ -69,12 +69,12 @@ class BlockVisibilityGroupForm extends EntityForm {
     $status = $block_visibility_group->save();
 
     if ($status) {
-      drupal_set_message($this->t('Saved the %label Block Visibility Group.', array(
+      $this->messenger()->addMessage($this->t('Saved the %label Block Visibility Group.', array(
         '%label' => $block_visibility_group->label(),
       )));
     }
     else {
-      drupal_set_message($this->t('The %label Block Visibility Group was not saved.', array(
+      $this->messenger()->addMessage($this->t('The %label Block Visibility Group was not saved.', array(
         '%label' => $block_visibility_group->label(),
       )));
     }

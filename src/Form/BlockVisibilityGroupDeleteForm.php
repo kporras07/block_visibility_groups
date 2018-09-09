@@ -59,7 +59,7 @@ class BlockVisibilityGroupDeleteForm extends EntityConfirmFormBase {
     }
     $this->entity->delete();
 
-    drupal_set_message(
+    $this->messenger->addMessage(
       $this->t('Deleted @type:  @label.',
         [
           '@type' => $this->entity->getEntityType()->getLabel(),

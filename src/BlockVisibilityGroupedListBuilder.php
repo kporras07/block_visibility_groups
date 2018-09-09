@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -52,9 +53,15 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
    *   The theme manager.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $block_visibility_group_storage
+   *   The group entity storage.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state system service.
+   * @param \Drupal\Core\Messenger\MessengerInterface|null $messenger
+   *   The messenger service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, EntityStorageInterface $block_visibility_group_storage, StateInterface $state) {
-    parent::__construct($entity_type, $storage, $theme_manager, $form_builder);
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, EntityStorageInterface $block_visibility_group_storage, StateInterface $state, MessengerInterface $messenger) {
+    parent::__construct($entity_type, $storage, $theme_manager, $form_builder, $messenger);
 
     $this->group_storage = $block_visibility_group_storage;
     $this->state = $state;
@@ -70,7 +77,8 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
       $container->get('theme.manager'),
       $container->get('form_builder'),
       $container->get('entity.manager')->getStorage('block_visibility_group'),
-      $container->get('state')
+      $container->get('state'),
+      $container->get('messenger')
     );
   }
 
