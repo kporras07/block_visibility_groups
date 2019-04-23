@@ -82,7 +82,7 @@ class BlockVisibilityGroupForm extends EntityForm {
         ])
       );
     }
-    $form_state->setRedirectUrl($block_visibility_group->urlInfo('collection'));
+    $form_state->setRedirectUrl($block_visibility_group->toUrl('collection'));
   }
 
 }

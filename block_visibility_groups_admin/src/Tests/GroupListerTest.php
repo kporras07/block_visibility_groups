@@ -6,6 +6,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Provides automated tests for the block_visibility_groups_admin module.
+ *
+ * @group block_visibility_groups_admin
  */
 class GroupListerTest extends WebTestBase {
 

@@ -423,7 +423,7 @@ class BlockVisibilityGroupedListBuilder extends BlockListBuilder {
       'edit' => [
         '#type' => 'link',
         '#title' => t('Edit Group Settings'),
-        '#url' => $group->urlInfo('edit-form'),
+        '#url' => $group->toUrl('edit-form'),
       ],
     ];
     return $help_group;
