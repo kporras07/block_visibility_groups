@@ -61,7 +61,7 @@ class BlockVisibilityGroup extends ConfigEntityBase implements BlockVisibilityGr
   /**
    * Whether other conditions are allowed in the group.
    *
-   * @var boolean
+   * @var bool
    */
   protected $allow_other_conditions;
 

@@ -30,13 +30,6 @@ class GroupListerTest extends WebTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
-    parent::setUp();
-  }
-
-  /**
    * Tests block_visibility_groups_admin functionality.
    */
   public function testGroupLister() {

@@ -101,7 +101,7 @@ abstract class BlockVisibilityGroupsTestBase extends WebTestBase {
     $this->drupalPostForm('admin/structure/block/manage/' . $block_id, $settings, 'Save block', [
       'query' => [
         'block_visibility_group' => $group_id,
-      ]
+      ],
     ]);
   }
 
